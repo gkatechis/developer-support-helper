@@ -7,21 +7,35 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="https://assets.zendesk.com/apps/sdk-assets/css/latest/zendesk_garden.css"
         type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zendeskgarden/css-forms@7/dist/index.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zendeskgarden/css-grid@0.1.36/dist/index.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zendeskgarden/css-utilities@4/dist/index.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zendeskgarden/css-menus@9/dist/index.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zendeskgarden/css-callouts@3/dist/index.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zendeskgarden/css-buttons@7/dist/index.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zendeskgarden/css-arrows@3/dist/index.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zendeskgarden/css-modals@6/dist/index.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zendeskgarden/css-tooltips@4/dist/index.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zendeskgarden/css-bedrock@7/dist/index.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@zendeskgarden/container-utilities@0.5.2/dist/index.cjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@zendeskgarden/css-variables@6/dist/index.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@zendeskgarden/container-selection@1/dist/index.cjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@zendeskgarden/container-modal@0.7.3/dist/index.cjs.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zendeskgarden/css-forms@7/dist/index.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zendeskgarden/css-grid@0.1.36/dist/index.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zendeskgarden/css-utilities@4/dist/index.min.css">
-    <script src="https://static.zdassets.com/zendesk_app_framework_sdk/2.0/zaf_sdk.min.js">
+    <script src="https://static.zdassets.com/zendesk_app_framework_sdk/2.0/zaf_sdk.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@zendeskgarden/container-buttongroup@0.3.2/dist/index.cjs.min.js">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@zendeskgarden/stylelint-config@12/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@zendeskgarden/react-theming@8/dist/index.cjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@zendeskgarden/container-focusjail@1/dist/index.cjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@zendeskgarden/react-utilities@8/dist/index.cjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@zendeskgarden/react-modals@8/dist/index.cjs.min.js"></script>
     </script>
 
     <script>
         var client = ZAFClient.init();
         client.invoke('resize', {
             width: '800px',
-            height: '600px'
+            height: '650px'
         });
     </script>
 
@@ -36,9 +50,39 @@
                 </div>
 
                 <div class="l-btn-group">
-                    <button class="c-btn c-btn--primary c-btn--pill c-btn--danger">Clear previous
+                    <button class="c-btn c-btn--primary c-btn--pill c-btn--danger" id="clearFields">Clear previous
                         entries</button>
                 </div>
+                <!-- <div id=clearModal>
+                    <a class="c-btn js-dialog js-backdrop" href="#zd-test-modal" role="button">Open Test Modal</a>
+                    <section aria-hidden="true" class="c-dialog" id="zd-test-modal" role="dialog" style="display:none"
+                        tabindex="-1">
+                        <header>
+                            <h1 class="c-dialog__header">Test</h1>
+                            <button aria-label="close" class="c-dialog__close"></button>
+                        </header>
+                        <p class="c-dialog__body">Hello World</p>
+                        <footer class="c-dialog__footer">
+                            <button class="c-btn js-close">Goodbye</button>
+                        </footer>
+                    </section>
+                </div>
+                <script>
+                    var modal = document.getElementById("clearModal");
+                    var btn = document.getElementById("clearFields");
+                    var span = document.getElementsByClassName("js-close")[0];
+                    btn.onclick = function () {
+                        modal.style.display = "block";
+                    }
+                    span.onclick = function () {
+                        modal.style.display = "none"
+                    }
+                    window.onclick = function (event) {
+                        if (event.target == modal) {
+                            modal.style.display = "none";
+                        }
+                    }
+                </script> -->
             </div>
         </div>
     </div>
@@ -238,10 +282,10 @@
         <div class="container-fluid">
             <div class="row ">
                 <div class="col-md-4">
-					
-                    <legend class="c-txt__label u-mt-xs">Issue complexity</legend>
+
+                    <legend class="c-txt__label u-mt-xs">Very complex issue to you: 1 (low) - 5 (high)</legend>
                 </div>
-				 <div class="col-md-4">
+                <div class="col-md-4">
                     <div class="container-fluid">
 
                         <div class="c-txt u-mb-sm">
@@ -263,46 +307,47 @@
             </div>
         </div>
 
-        
-            <div class="row u-ml-xxs">
-                <div class="col-">
-                    <div class="c-chk u-mr-xs">
-                        <input class="c-chk__input" id="diff1" name="name" type="radio">
-                        <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="diff1">1
-                        </label>
-                    </div>
+
+        <div class="row u-ml-xxs">
+            <div class="col-">
+                <div class="c-chk u-mr-xs">
+                    <input class="c-chk__input" id="diff1" name="name" type="radio">
+                    <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="diff1">1
+                    </label>
                 </div>
-                <div class="col-">
-                    <div class="c-chk u-mr-xs">
-                        <input class="c-chk__input" id="diff2" name="name" type="radio">
-                        <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="diff2">2
-                        </label>
-                    </div>
+            </div>
+            <div class="col-">
+                <div class="c-chk u-mr-xs">
+                    <input class="c-chk__input" id="diff2" name="name" type="radio">
+                    <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="diff2">2
+                    </label>
                 </div>
-                <div class="col-">
-                    <div class="c-chk u-mr-xs">
-                        <input class="c-chk__input" id="diff3" name="name" type="radio">
-                        <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="diff3">3
-                        </label>
-                    </div>
+            </div>
+            <div class="col-">
+                <div class="c-chk u-mr-xs">
+                    <input class="c-chk__input" id="diff3" name="name" type="radio">
+                    <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="diff3">3
+                    </label>
                 </div>
-                <div class="col-">
-                    <div class="c-chk u-mr-xs">
-                        <input class="c-chk__input " id="diff4" name="name" type="radio">
-                        <label class="c-chk__label c-chk__label--radio c-chk__label--regular " for="diff4">4
-                        </label>
-                    </div>
+            </div>
+            <div class="col-">
+                <div class="c-chk u-mr-xs">
+                    <input class="c-chk__input " id="diff4" name="name" type="radio">
+                    <label class="c-chk__label c-chk__label--radio c-chk__label--regular " for="diff4">4
+                    </label>
                 </div>
-                <div class="col-">
-                    <div class="c-chk u-mr-xs">
-                        <input class="c-chk__input" id="diff5" name="name" type="radio">
-                        <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="diff5">5
-                        </label>
-                    </div>
-					
+            </div>
+            <div class="col-">
+                <div class="c-chk u-mr-xs">
+                    <input class="c-chk__input" id="diff5" name="name" type="radio">
+                    <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="diff5">5
+                    </label>
+                </div>
+
             </div>
         </div>
-		
+
     </form>
 </body>
+
 </html>

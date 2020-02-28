@@ -12,6 +12,14 @@
       "top_bar": "assets/iframe.html"
     }
   },
+  "top_bar": {
+    "autoHide": true,
+    "url": "assets/top_bar.html",
+    "size": {
+      "width": "800px",
+      "height": "600px"
+    }
+  },
   "version": "1.0",
   "frameworkVersion": "2.0"
 }

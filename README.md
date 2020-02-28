@@ -1,15 +1,8 @@
-# App name
+# Developer Support ticket helper
 
-[brief description of the app]
+This app helps agents in Z1 to identify Developer Support tickets by creating a Sunshine CR relationship between the ticket and the selected dev platform topic, along with the current user making the update and the complexity of the request.
 
-### The following information is displayed:
 
-* info1
-* info2
-* info3
+Please submit bug reports to gkatechis@zendesk.com
 
-Please submit bug reports to [Insert Link](). Pull requests are welcome.
-
-### Screenshot(s):
-[put your screenshots down here.]
 # Developer-Support-helper
