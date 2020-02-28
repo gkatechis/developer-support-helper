@@ -9,17 +9,16 @@
   "private": true,
   "location": {
     "support": {
-      "top_bar": "assets/iframe.html"
+      "top_bar": {
+        "url": "assets/iframe.html",
+        "size": {
+          "width": "800px",
+          "height": "660px"
+        }
+      }
     }
   },
-  "top_bar": {
-    "autoHide": true,
-    "url": "assets/top_bar.html",
-    "size": {
-      "width": "800px",
-      "height": "700px"
-    }
-  },
+  
   "version": "1.0",
   "frameworkVersion": "2.0"
 }
