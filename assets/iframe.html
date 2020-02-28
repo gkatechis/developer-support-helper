@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Title</title>
+
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://assets.zendesk.com/apps/sdk-assets/css/latest/zendesk_garden.css"
+        type="text/css">
+    <script src="https://cdn.jsdelivr.net/npm/@zendeskgarden/container-utilities@0.5.2/dist/index.cjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@zendeskgarden/css-variables@6/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@zendeskgarden/container-selection@1/dist/index.cjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@zendeskgarden/container-modal@0.7.3/dist/index.cjs.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zendeskgarden/css-forms@7/dist/index.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zendeskgarden/css-grid@0.1.36/dist/index.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zendeskgarden/css-utilities@4/dist/index.min.css">
+    <script src="https://static.zdassets.com/zendesk_app_framework_sdk/2.0/zaf_sdk.min.js">
+    </script>
+
+    <script>
+        var client = ZAFClient.init();
+        client.invoke('resize', {
+            width: '800px',
+            height: '600px'
+        });
+    </script>
+
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xl u-bg-gather-pink u-ta-center">
+                <div class="col-lg">
+                    <label class="c-txt__label u-font-family-system u-fs-lg">Developer Support ticker helper</label>
+                </div>
+
+                <div class="l-btn-group">
+                    <button class="c-btn c-btn--primary c-btn--pill c-btn--danger">Clear previous
+                        entries</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-4 u-br-xl u-bg-kale-100 ">
+
+                    <fieldset>
+                        <legend class="c-txt__label u-mt-xs ">APIs</legend>
+                        <div class="c-chk u-mb-xs">
+                            <input class="c-chk__input" id="id-1" name="name" type="radio">
+                            <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-1">Support
+                                API</label>
+                        </div>
+                        <div class="c-chk u-mb-xs">
+                            <input class="c-chk__input" id="id-2" name="name" type="radio">
+                            <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-2">Chat
+                                API</label>
+                        </div>
+                        <div class="c-chk u-mb-xs">
+                            <input class="c-chk__input" id="id-3" name="name" type="radio">
+                            <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-3">Talk
+                                API</label>
+                        </div>
+                        <div class="c-chk u-mb-xs">
+                            <input class="c-chk__input" id="id-4" name="name" type="radio">
+                            <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-4">Chat
+                                Conversations API</label>
+                        </div>
+                        <div class="c-chk u-mb-xs">
+                            <input class="c-chk__input" id="id-5" name="name" type="radio">
+                            <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-5">Guide
+                                API</label>
+                        </div>
+                        <div class="c-chk u-mb-xs">
+                            <input class="c-chk__input" id="id-6" name="name" type="radio">
+                            <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-6">Sell
+                                API</label>
+                        </div>
+                    </fieldset>
+
+                </div>
+                <div class="col-md-4 u-br-xl u-bg-blue-100">
+                    <fieldset>
+                        <legend class="c-txt__label u-mt-xs">Mobile SDks</legend>
+                        <div class="c-chk u-mb-xs">
+                            <input class="c-chk__input" id="id-7" name="name" type="radio">
+                            <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-7">Chat SDK -
+                                iOS</label>
+                        </div>
+                        <div class="c-chk u-mb-xs">
+                            <input class="c-chk__input" id="id-8" name="name" type="radio">
+                            <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-8">Chat SDK -
+                                Android</label>
+                        </div>
+                        <div class="c-chk u-mb-xs">
+                            <input class="c-chk__input" id="id-9" name="name" type="radio">
+                            <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-9">Support SDK
+                                -
+                                iOS</label>
+                        </div>
+                        <div class="c-chk u-mb-xs">
+                            <input class="c-chk__input" id="id-10" name="name" type="radio">
+                            <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-10">Support
+                                SDK -
+                                Android</label>
+                        </div>
+                    </fieldset>
+
+                </div>
+                <div class="col-md-4 u-br-xl u-bg-green-100">
+                    <fieldset>
+                        <legend class="c-txt__label u-mt-xs">Widget</legend>
+                        <div class="c-chk u-mb-xs">
+                            <input class="c-chk__input" id="id-17" name="name" type="radio">
+                            <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-17">Widget
+                                API</label>
+                        </div>
+                        <div class="c-chk u-mb-xs">
+                            <input class="c-chk__input" id="id-18" name="name" type="radio">
+                            <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-18">Web
+                                SDK</label>
+                        </div>
+                    </fieldset>
+
+
+
+                </div>
+
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-4 u-br-xl u-bg-yellow-100">
+
+                    <fieldset>
+                        <legend class="c-txt__label u-mt-xs">Apps Framework development</legend>
+                        <div class="c-chk u-mb-xs">
+                            <input class="c-chk__input" id="id-11" name="name" type="radio">
+                            <label class="c-chk__label c-chk__label--radio c-chk__label--regular"
+                                for="id-11">Support</label>
+                        </div>
+                        <div class="c-chk u-mb-xs">
+                            <input class="c-chk__input" id="id-12" name="name" type="radio">
+                            <label class="c-chk__label c-chk__label--radio c-chk__label--regular"
+                                for="id-12">Chat</label>
+                        </div>
+                        <div class="c-chk u-mb-xs">
+                            <input class="c-chk__input" id="id-13" name="name" type="radio">
+                            <label class="c-chk__label c-chk__label--radio c-chk__label--regular"
+                                for="id-13">Sell</label>
+                        </div>
+
+                    </fieldset>
+
+
+                </div>
+                <div class="col-md-4  u-br-xl u-bg-red-100">
+                    <fieldset>
+                        <legend class="c-txt__label u-mt-xs">Sunshine</legend>
+                        <div class="c-chk u-mb-xs">
+                            <input class="c-chk__input" id="id-19" name="name" type="radio">
+                            <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-19">Custom
+                                Objects</label>
+                        </div>
+                        <div class="c-chk u-mb-xs">
+                            <input class="c-chk__input" id="id-20" name="name" type="radio">
+                            <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-20">Events and
+                                Profiles</label>
+                        </div>
+                        <div class="c-chk u-mb-xs">
+                            <input class="c-chk__input" id="id-21" name="name" type="radio">
+                            <label class="c-chk__label c-chk__label--radio c-chk__label--regular"
+                                for="id-21">Conversations</label>
+                        </div>
+                        <div class="c-chk u-mb-xs">
+                            <input class="c-chk__input" id="id-22" name="name" type="radio">
+                            <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-22">AWS Events
+                                BridgeChannels Framework</label>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="col-md-4 u-br-xl u-bg-grey-100">
+                    <fieldset>
+                        <legend class="c-txt__label u-mt-xs ">Other</legend>
+                        <div class="c-chk u-mb-xs">
+                            <input class="c-chk__input" id="id-14" name="name" type="radio">
+                            <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-14">Sponsored
+                                dev
+                                account</label>
+                        </div>
+                        <div class="c-chk u-mb-xs">
+                            <input class="c-chk__input" id="id-15" name="name" type="radio">
+                            <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-15">Getting
+                                app
+                                published</label>
+                        </div>
+                        <div class="c-chk u-mb-xs">
+                            <input class="c-chk__input" id="id-16" name="name" type="radio">
+                            <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-16">Global
+                                OAuth
+                                client
+                            </label>
+                        </div>
+                        <div class="c-chk u-mb-xs">
+                            <input class="c-chk__input" id="id-23" name="name" type="radio">
+                            <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-23">API
+                                Clients</label>
+                        </div>
+                        <div class="c-chk u-mb-xs">
+                            <input class="c-chk__input" id="id-24" name="name" type="radio">
+                            <label class="c-chk__label c-chk__label--radio c-chk__label--regular"
+                                for="id-24">Guide/Gather
+                                customization</label>
+                        </div>
+                    </fieldset>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl">
+                    <div class="c-txt u-mb">
+                        <label class="c-txt__label" for="addlTxt">Additional info</label>
+                        <input class="c-txt__input" id="addlTxt" type="text"
+                            placeholder="Add any additional comments here">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <form>
+        <div class="container-fluid">
+            <div class="row ">
+                <div class="col-md-4">
+					
+                    <legend class="c-txt__label u-mt-xs">Issue complexity</legend>
+                </div>
+				 <div class="col-md-4">
+                    <div class="container-fluid">
+
+                        <div class="c-txt u-mb-sm">
+
+
+                            <input class="c-txt__input is-disabled" disabled id="advName" type="text"
+                                placeholder="Current user">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="l-btn-group">
+                        <button class="c-btn c-btn--sm c-btn--pill c-btn--primary"><strong
+                                class="u-semibold">Save</strong></button>
+                        <button class="c-btn c-btn--sm c-btn--pill c-btn--muted"><strong
+                                class="u-semibold">Cancel</strong></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+            <div class="row u-ml-xxs">
+                <div class="col-">
+                    <div class="c-chk u-mr-xs">
+                        <input class="c-chk__input" id="diff1" name="name" type="radio">
+                        <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="diff1">1
+                        </label>
+                    </div>
+                </div>
+                <div class="col-">
+                    <div class="c-chk u-mr-xs">
+                        <input class="c-chk__input" id="diff2" name="name" type="radio">
+                        <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="diff2">2
+                        </label>
+                    </div>
+                </div>
+                <div class="col-">
+                    <div class="c-chk u-mr-xs">
+                        <input class="c-chk__input" id="diff3" name="name" type="radio">
+                        <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="diff3">3
+                        </label>
+                    </div>
+                </div>
+                <div class="col-">
+                    <div class="c-chk u-mr-xs">
+                        <input class="c-chk__input " id="diff4" name="name" type="radio">
+                        <label class="c-chk__label c-chk__label--radio c-chk__label--regular " for="diff4">4
+                        </label>
+                    </div>
+                </div>
+                <div class="col-">
+                    <div class="c-chk u-mr-xs">
+                        <input class="c-chk__input" id="diff5" name="name" type="radio">
+                        <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="diff5">5
+                        </label>
+                    </div>
+					
+            </div>
+        </div>
+		
+    </form>
+</body>
+</html>
