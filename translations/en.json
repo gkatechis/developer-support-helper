@@ -1,8 +1,8 @@
 {
   "app": {
-    "name": "Zen Tunes",
-    "short_description": "Play the famous zen tunes in your help desk.",
-    "long_description": "Play the famous zen tunes in your help desk and \n listen to the beats it has to offer.",
-    "installation_instructions": "Simply click install."
+    "name": "Developer Support ticket helper",
+    "short_description": "Allows agents to record the developer platform tool in use on each ticket.",
+    "long_description": "Utilizing custom resources (created upon install), you can now track the developer platform tools that requesters are using without having to rely on the Product Area field",
+    "installation_instructions": "Click the install button!"
   }
 }
