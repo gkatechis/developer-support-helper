@@ -1,0 +1,7 @@
+.customHR{
+    margin-top: 0px;
+    margin-bottom: 5px;
+    border-top-width: 2px;
+    border-top-style: solid;
+    border-top-color: rgba(0, 0, 0, 0.1);
+}
