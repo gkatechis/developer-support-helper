@@ -19,12 +19,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@zendeskgarden/container-utilities@0.5.2/dist/index.cjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@zendeskgarden/css-variables@6/dist/index.min.js"></script>
     <script src="https://static.zdassets.com/zendesk_app_framework_sdk/2.0/zaf_sdk.min.js"></script>
+    <script src="app.js"></script>
     </script>
 
-    <!--ZAF init-->
-    <script>
-        var client = ZAFClient.init();
-    </script>
 </head>
 
 <body>
@@ -34,16 +31,16 @@
             <div class="col-md-4">
                 <label class="c-txt__label u-font-family-system u-fs-lg">Developer Platform</label>
             </div>
-            <div class="col-md-4 u-pt-sm">
+            <div class="col-md-4 u-pt-sm" id="resetBtn">
                 <a href="https://z3ndoctorwhom.zendesk.com/api/sunshine/relationships/records/{id}">Reset</a>
             </div>
         </div>
         <hr class="customHR">
     </div>
-    
+
     </div>
 
-    <form>
+    <form enctype="multipart/form-data" method="POST" name="devHelper">
         <div class="container-fluid">
             <div class="row">
                 <!--APIs-->
@@ -90,7 +87,7 @@
                 <!--Mobile SDK tools-->
                 <div class="col-md-4 ">
                     <fieldset>
-                        <legend class="c-txt__label u-mt-xs">Mobile SDks</legend>
+                        <legend class="c-txt__label u-mt-xs">Mobile SDKs</legend>
                         <div class="u-mb-xxs">
                             <div>
                                 <input class="c-chk__input" id="id-7" name="name" type="radio">
@@ -168,7 +165,7 @@
                     </fieldset>
                 </div>
             </div>
-            
+
         </div>
         <div class="container-fluid">
             <div class="row u-pb-xs">
@@ -264,8 +261,7 @@
                 </div>
             </div>
         </div>
-    </form>
-    <form>
+
         <div class="container-fluid">
             <div class="row">
                 <div class="col-">
