@@ -1,4 +1,6 @@
     var top_bar = ZAFClient.init();
+    let ticketID;
+
 
     // Set current user name in app
 
@@ -21,8 +23,7 @@
     })
 
     function testButton() {
-        var ticketID = top_bar.get('ticket.id')
-        top_bar.request('/api/sunshine/objects/records/zen:ticket:ticketID/relationships/tix_to_devtixinfo')
+        top_bar.request(`/api/sunshine/objects/records/zen:ticket:${ticketID}/relationships/tix_to_devtixinfo`)
             .then((response) => {
                 // console.log("Relationship exists already.")
                 console.log(response)
@@ -51,7 +52,7 @@
         // This code will be called on app.registered event of ticket.
         ticketSidebar.get('ticket.id').then((result) => {
             // console.log(result['ticket.id'], "from ", location, "and GUID: ", instanceGuid)
-            let ticketID = result['ticket.id'];
+            ticketID = result['ticket.id'];
             document.getElementById("sidebar_data").innerHTML = `Ticket ID: ${ticketID}`;
         })
     }
@@ -61,6 +62,7 @@
         top_bar.on("activeTab", (data) => {
             let instance_info = JSON.parse(data);
             displaySidebarInfo(instance_info.instanceGuid, instance_info.location, instance_info.event);
+
         });
 
         // Attach handler to existing sidebar instances.
