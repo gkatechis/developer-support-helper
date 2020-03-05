@@ -1,9 +1,9 @@
-    var client = ZAFClient.init();
+    var top_bar = ZAFClient.init();
 
     // Set current user name in app
 
-    client.on('app.registered', function user() {
-        client.get('currentUser')
+    top_bar.on('app.registered', function user() {
+        top_bar.get('currentUser')
             .then((success) => {
                 let userRecord = {
                     name: success.currentUser.name,
@@ -28,8 +28,8 @@
     }
 
     function testButton() {
-        var ticketID = client.get('ticket.id')
-        client.request('/api/sunshine/objects/records/zen:ticket:ticketID/relationships/tix_to_devtixinfo')
+        var ticketID = top_bar.get('ticket.id')
+        top_bar.request('/api/sunshine/objects/records/zen:ticket:ticketID/relationships/tix_to_devtixinfo')
             .then((response) => {
 
                 // console.log("Relationship exists already.")

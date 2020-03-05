@@ -15,6 +15,9 @@
           "width": "800px",
           "height": "770px"
         }
+      },
+      "ticket_sidebar": {
+        "autoLoad": false
       }
     }
   },
