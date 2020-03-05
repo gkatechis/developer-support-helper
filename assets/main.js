@@ -20,21 +20,12 @@
             })
     })
 
-    // Check if record exists, then do stuff
-    let recordCheck = {
-        url: '',
-        type: 'GET',
-        contentType: 'application/json',
-    }
-
     function testButton() {
         var ticketID = top_bar.get('ticket.id')
         top_bar.request('/api/sunshine/objects/records/zen:ticket:ticketID/relationships/tix_to_devtixinfo')
             .then((response) => {
-
                 // console.log("Relationship exists already.")
                 console.log(response)
-
             })
     }
 
@@ -61,7 +52,7 @@
         ticketSidebar.get('ticket.id').then((result) => {
             // console.log(result['ticket.id'], "from ", location, "and GUID: ", instanceGuid)
             let ticketID = result['ticket.id'];
-            document.getElementById("sidebar_data").textContent = `Ticket ID: ${ticketID}`;
+            document.getElementById("sidebar_data").innerHTML = `Ticket ID: ${ticketID}`;
         })
     }
 
