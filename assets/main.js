@@ -1,6 +1,15 @@
     var top_bar = ZAFClient.init();
     let ticketID;
 
+    // let newObjectRecord = {
+    //     data: {
+    //         type: "devtixinfo",
+    //         attributes: {
+    //             dev_platform_feature: 
+    //         }
+    //     }
+    // }
+
 
     // Set current user name in app
 
@@ -21,12 +30,20 @@
                 console.log(error)
             })
     })
-
     function testButton() {
         top_bar.request(`/api/sunshine/objects/records/zen:ticket:${ticketID}/relationships/tix_to_devtixinfo`)
             .then((response) => {
-                // console.log("Relationship exists already.")
-                console.log(response)
+                if (response.data.length = 0) {
+                      let settings = {
+                          url: '/api/sunshine/objects/records',
+                          type: 'POST',
+                          contentType: 'application/json',
+                          data: JSON.stringify(newGoal)
+                      }
+                    top_bar.request(options)
+                } else {
+                console.log("Relationship exists already.")
+                }
             })
     }
 
