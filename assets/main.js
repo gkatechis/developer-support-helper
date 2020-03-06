@@ -3,44 +3,88 @@
     let devPlatformValue;
     let complexityValue;
     let userName;
+    let userID;
     let ticketSidebar;
+    let createdObjectRecordID;
+    let createdRelationshipRecordID;
 
     // Check for existing CO relationship record; create if empty, do nothing if existing
 
-    let newObjectRecord = {
-        data: {
-            type: "devtixinfo",
-            attributes: {
-                dev_platform_feature: devPlatformValue,
-                complexity_rating: complexityValue,
-                complexity_rating_user_id: 123,
-                additional_info: "something",
-                ticket_id: ticketID
+    function getRecordData() {
+        let newObjectRecord = {
+            data: {
+                type: "devtixinfo",
+                attributes: {
+                    dev_platform_feature: parseInt(devPlatformValue),
+                    complexity_rating: parseInt(complexityValue),
+                    complexity_rating_user_id: userID,
+                    additional_info: "something",
+                    ticket_id: ticketID
+                }
             }
+        }
+        return {
+            url: '/api/sunshine/objects/records',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(newObjectRecord)
         }
     }
 
-    let newRecordSettings = {
-        url: '/api/sunshine/objects/records',
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(newObjectRecord)
+    function createRecordData() {
+        let newRelationshipRecord = {
+            data: {
+                relationship_type: "tix_to_devtixinfo",
+                source: `zen:ticket:${ticketID}`,
+                target: createdObjectRecordID
+
+
+            }
+        }
+        return {
+            url: '/api/sunshine/relationships/records',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(newRelationshipRecord)
+        }
     }
 
     function testButton() {
+        newRecordSettings = getRecordData()
         top_bar.request(`/api/sunshine/objects/records/zen:ticket:${ticketID}/relationships/tix_to_devtixinfo`)
             .then((response) => {
-                console.log(response)
-                console.log(response.data)
-                if (response.data.length = "0") {
+                console.log("1st response: ", response)
+                if (response.data.length === 0) {
                     top_bar.request(newRecordSettings)
-                        .then((success) => console.log("Successfully created record", success.id))
-                        .catch((error) => console.log("Record creation failed with error: ", error))
+                    .then((success) => {
+                        createdObjectRecordID = success.data.id
+                        console.log("Successfully created record: ", createdObjectRecordID)
+                        newRelationshipSettings = createRecordData()
+                        return createdObjectRecordID
+                    })
+                    .then((createdObjectRecordID) => {
+                        top_bar.request(newRelationshipSettings)
+                            .then((response) => {
+                                createdRelationshipRecordID = response.data.id
+                                console.log("Successfully created relationship record: ", createdRelationshipRecordID)
+                                return createdRelationshipRecordID
+                            })
+
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    })
                 } else {
-                    console.log("Relationship exists already.")
+                    console.log("second response ", response)
                 }
             })
+            .catch(error => {
+                console.log("Relationship record creation failed with error ", error)
+            })
     }
+
+
+
 
 
     // If sidebar location exists, pass this to the createTicketSidebar function
@@ -68,8 +112,8 @@
     function setTicketID() {
         data = ticketSidebar.get('ticket.id')
             .then((data) => {
-                ticketID = data["ticket.id"];
-                // console.log("from setTicketID ", ticketID);
+                ticketID = data["ticket.id"]
+                return ticketID
             })
     };
 
@@ -100,6 +144,7 @@
             })
             .then((userRecord) => {
                 userName = userRecord.name
+                userID = userRecord.id
                 document.getElementById('currentUserLabel').innerHTML = userName
             })
     })
