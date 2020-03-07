@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zendeskgarden/css-menus@9/dist/index.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zendeskgarden/css-buttons@7/dist/index.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zendeskgarden/css-bedrock@7/dist/index.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zendeskgarden/css-modals@6/dist/index.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
@@ -32,6 +33,9 @@
                 </div>
                 <div class="col-md-4 u-pt-sm" id="resetBtn">
                     <input type="reset" value="Reset">
+                </div>
+                <div class="col-md-4 u-pt-sm">
+                    <label id=sidebar_data></label>
                 </div>
             </div>
             <p>Writing code against the Zendesk Developer Platform. Select most significant area.</p>
@@ -272,7 +276,6 @@
                             <input class="c-chk__input" id="complexity5" name="devComplexity" type="radio" value="5">
                             <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="complexity5">5
                             </label>
-                            <input type="button" value="Get value">
                         </div>
                     </div>
                 </div>
@@ -291,16 +294,15 @@
         <div class="row">
             <div class="col-xl">
                 <div class="l-btn-group float-right u-pr-sm u-pb-sm u-pt-sm">
-                    <button class="c-btn c-btn--sm c-btn--pill c-btn--primary" id="saveButton"><strong
-                            class="u-semibold">Save</strong></button>
+                    <input type="button" class="c-btn c-btn--sm c-btn--pill c-btn--primary" value="Save"
+                        onclick="saveButton()">
                     <button class="c-btn c-btn--sm c-btn--pill c-btn--muted"><strong
                             class="u-semibold">Cancel</strong></button>
                 </div>
             </div>
         </div>
     </form>
-    <label id=sidebar_data></label>
-    <input type="button" onclick="testButton()" value="Check or create CR record">
+
 </body>
 
 </html>

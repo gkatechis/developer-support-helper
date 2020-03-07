@@ -8,9 +8,8 @@
     let createdObjectRecordID;
     let createdRelationshipRecordID;
 
-    // Check for existing CO relationship record; create if empty, do nothing if existing
-
-    function getRecordData() {
+    // Sets devtixinfo object values, passes into saveButton function, then creates new object record
+    function createObjectData() {
         let newObjectRecord = {
             data: {
                 type: "devtixinfo",
@@ -31,14 +30,13 @@
         }
     }
 
+    // Sets tix_to_devtixino relationship values, passed into saveButton function, then creates new relationship record
     function createRecordData() {
         let newRelationshipRecord = {
             data: {
                 relationship_type: "tix_to_devtixinfo",
                 source: `zen:ticket:${ticketID}`,
                 target: createdObjectRecordID
-
-
             }
         }
         return {
@@ -49,44 +47,41 @@
         }
     }
 
-    function testButton() {
-        newRecordSettings = getRecordData()
-        top_bar.request(`/api/sunshine/objects/records/zen:ticket:${ticketID}/relationships/tix_to_devtixinfo`)
-            .then((response) => {
-                console.log("1st response: ", response)
-                if (response.data.length === 0) {
-                    top_bar.request(newRecordSettings)
-                    .then((success) => {
-                        createdObjectRecordID = success.data.id
-                        console.log("Successfully created record: ", createdObjectRecordID)
-                        newRelationshipSettings = createRecordData()
-                        return createdObjectRecordID
-                    })
-                    .then((createdObjectRecordID) => {
-                        top_bar.request(newRelationshipSettings)
-                            .then((response) => {
-                                createdRelationshipRecordID = response.data.id
-                                console.log("Successfully created relationship record: ", createdRelationshipRecordID)
-                                return createdRelationshipRecordID
+    // Check if relationship record exists for ticket already, if not, creates object record and then relationship record
+    function saveButton() {
+        if (!$("input[name='devPlatform']:checked").val()) {
+            top_bar.invoke('notify', 'Please select a platform tool before saving.', 'error')
+        } else {
+            top_bar.request(`/api/sunshine/objects/records/zen:ticket:${ticketID}/relationships/tix_to_devtixinfo`)
+                .then((success) => {
+                    if (success.data.length === 0) {
+                        top_bar.request(createObjectData())
+                            .then((success) => {
+                                createdObjectRecordID = success.data.id
+                                console.log("Successfully created record: ", createdObjectRecordID)
+                                newRelationshipSettings = createRecordData()
+                                return createdObjectRecordID
                             })
-
-                    })
-                    .catch((error) => {
-                        console.log(error)
-                    })
-                } else {
-                    console.log("second response ", response)
-                }
-            })
-            .catch(error => {
-                console.log("Relationship record creation failed with error ", error)
-            })
-    }
-
-
-
-
-
+                            .then((createdObjectRecordID) => {
+                                top_bar.request(newRelationshipSettings)
+                                    .then((success) => {
+                                        createdRelationshipRecordID = success.data.id
+                                        console.log("Successfully created relationship record: ", createdRelationshipRecordID)
+                                        return createdRelationshipRecordID
+                                    })
+                            })
+                            .catch((error) => {
+                                console.log(error)
+                            })
+                    } else {
+                        console.log("Relationship already exists.")
+                    }
+                })
+                .catch(error => {
+                    console.log("Relationship record creation failed with error ", error)
+                })
+        }
+    };
     // If sidebar location exists, pass this to the createTicketSidebar function
     top_bar.on('app.registered', function initializeTicketSidebar() {
         top_bar.get("instances")
@@ -122,12 +117,10 @@
         $("input:radio[name*='dev']").click(function () {
             devPlatformValue = $("input[type=radio][name=devPlatform]:checked").val();
             complexityValue = $("input[type=radio][name=devComplexity]:checked").val();
-            if (devPlatformValue && !complexityValue) {
-                console.log(devPlatformValue);
-            } else if (complexityValue && !devPlatformValue) {
-                console.log(complexityValue)
+            if (devPlatformValue && !complexityValue) {} else if (complexityValue && !devPlatformValue) {
+
             } else if (complexityValue && devPlatformValue) {
-                console.log(complexityValue, devPlatformValue)
+
             }
         });
     });
