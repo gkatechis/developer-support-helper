@@ -1,11 +1,75 @@
     var top_bar = ZAFClient.init();
+
     let devPlatformValue;
     let complexityValue;
     let addInfoValue;
     let userName;
     let userID;
-    let ticketSidebar;
     let createdRelationshipRecordID;
+    let ticketID;
+
+    // Greg note: this is the first thing that is running
+    top_bar.on("app.registered", () => {
+        currentUser();
+        // Listen for event that sidebar apps will be sending.
+        top_bar.on("activeTab", (data) => {
+            let instance_info = JSON.parse(data);
+            currentUser();
+            createTicketSidebar(instance_info.instanceGuid, instance_info.location, instance_info.event);
+        });
+
+        // Attach handler to existing sidebar instances.
+        top_bar.get("instances").then((data) => {
+            // var instanceGuids = Object.keys(data.instances);
+            Object.keys(data.instances).forEach((instanceGuid) => {
+                let location = data.instances[instanceGuid].location;
+                if (location === "ticket_sidebar") {
+                    createTicketSidebar(instanceGuid, location);
+                    // When first displaying agent UI, there should only be one app.
+                    setTicketID(instanceGuid, location);
+                }
+            });
+        });
+
+        // Attach handler to new sidebar instances.
+        top_bar.on("instance.created", (context) => {
+            let instanceGuid = context.instanceGuid;
+            let location = context.location;
+            if (location === "ticket_sidebar") {
+                createTicketSidebar(instanceGuid, location);
+                // Sidebar instances of the app are created when first displaying that ticket or user.
+                // Update display to new app instance's info.
+                setTicketID(instanceGuid, location);
+            }
+        });
+    });
+
+    // This sets the ticket ID
+    // Greg note: this along with "setSidebarEventHandler" is called from "top_bar.on("app.registered")"
+    function setTicketID(instanceGuid, location) {
+        let ticketSidebar = top_bar.instance(instanceGuid);
+        // This code will be called on app.registered event of ticket.
+        ticketSidebar.get('ticket.id').then((result) => {
+            ticketID = result["ticket.id"]
+            document.getElementById("sidebar_data").innerHTML = `Ticket ID: ${ticketID}`;
+            return ticketID
+        })
+    };
+
+    // Greg note: this along with "createTicketSidebar" is called from "top_bar.on("app.registered")"
+    // This handles the events sent from the sidebar to topbar app
+    function createTicketSidebar(instanceGuid, location) {
+        // Get sidebar app instance.
+        ticketSidebar = top_bar.instance(instanceGuid);
+        // Have sidebar app call top_bar app's "activeTab" event on sidebar's "app.activated" and "app.deactivated" events.
+        ticketSidebar.on("app.activated", () => {
+            top_bar.trigger("activeTab",
+                `{"instanceGuid":"${instanceGuid}", "location": "${location}", "event":"activate"}`);
+        });
+        ticketSidebar.on("app.deactivated", () => {
+            top_bar.trigger("activeTab", '{"instanceGuid":"none", "location": "none", "event":"deactivate"}');
+        });
+    }
 
     // Sets devtixinfo object values, passes into saveButton function, then creates new object record
     function createObjectData() {
@@ -25,7 +89,10 @@
             url: '/api/sunshine/objects/records',
             type: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify(newObjectRecord)
+            data: JSON.stringify(newObjectRecord, function replacer(key, value) {
+                var blacklist = ['complexity_rating', 'complexity_rating_user_id']
+                return blacklist.indexOf(key) === -1 ? value : undefined
+            })
         }
     }
 
@@ -46,14 +113,21 @@
         }
     }
 
+    function getRecordData() {
+        return top_bar.request(`/api/sunshine/objects/records/zen:ticket:${ticketID}/relationships/tix_to_devtixinfo`)
+    }
+
+    function replaceNull(key, value) {
+
+    }
+
     // Check if relationship record exists for ticket already, if not, creates object record and then relationship record
     function saveButton() {
         // Get text input from form
         if (!$("input[name='devPlatform']:checked").val()) {
             top_bar.invoke('notify', 'Please select a platform tool before saving.', 'error')
         } else {
-            setTicketID();
-            top_bar.request(`/api/sunshine/objects/records/zen:ticket:${ticketID}/relationships/tix_to_devtixinfo`)
+            getRecordData()
                 .then((success) => {
                     if (success.data.length === 0) {
                         addInfoValue = document.getElementById("addlTxt").value;
@@ -64,7 +138,7 @@
                                 newRelationshipSettings = createRecordData()
                                 return createdObjectRecordID
                             })
-                            .then((createdObjectRecordID) => {
+                            .then(() => {
                                 top_bar.request(newRelationshipSettings)
                                     .then((success) => {
                                         createdRelationshipRecordID = success.data.id
@@ -74,7 +148,7 @@
                                     })
                             })
                             .catch((error) => {
-                                console.log(error)
+                                console.log(error.responseText)
                             })
                     } else {
                         console.log("Relationship already exists, here's the relationship record: ", success.data[0].id, "and here's the target object ID: ", success.data[0].target)
@@ -86,56 +160,6 @@
                 })
         }
     };
-    // If sidebar location exists, pass this to the createTicketSidebar function
-    top_bar.on('app.registered', function initializeTicketSidebar() {
-        top_bar.get("instances")
-            .then((data) => {
-                // var instanceGuids = Object.keys(data.instances);
-                Object.keys(data.instances).forEach((instanceGuid) => {
-                    let location = data.instances[instanceGuid].location;
-                    if (location === "ticket_sidebar") {
-                        createTicketSidebar(instanceGuid, location);
-                    }
-                })
-            })
-        // Attach handler to new sidebar instances.
-        top_bar.on("instance.created", (context) => {
-            let instanceGuid = context.instanceGuid;
-            let location = context.location;
-            if (location === "ticket_sidebar") {
-
-                createTicketSidebar(instanceGuid, location);
-
-                // Sidebar instances of the app are created when first displaying that ticket or user.
-                // Update display to new app instance's info.
-                createTicketSidebar(instanceGuid, location);
-            }
-        });
-    });
-
-    // When receiving from initializeTicketSidebar function, create ticket sidebar app instance
-    function createTicketSidebar(instanceGuid, location) {
-        ticketSidebar = top_bar.instance(instanceGuid)
-        // console.log("instance created at ", location);
-        ticketSidebar.on("app.activated", () => {
-            top_bar.trigger("activeTab",
-                `{"instanceGuid":"${instanceGuid}", "location": "${location}", "event":"activate"}`);
-        });
-        ticketSidebar.on("app.deactivated", () => {
-            top_bar.trigger("activeTab", '{"instanceGuid":"none", "location": "none", "event":"deactivate"}');
-        });
-        setTicketID(ticketSidebar);
-    };
-
-    // Now that ticket sidebar has been created, send ticket ID information to global
-    function setTicketID(ticketSidebar) {
-        data = ticketSidebar.get('ticket.id')
-            .then((data) => {
-                ticketID = data["ticket.id"]
-                document.getElementById("sidebar_data").innerHTML = `Ticket ID: ${ticketID}`;
-                return ticketID
-            })
-    };
 
     // Get radio button values from form
     $(function () {
@@ -146,7 +170,7 @@
     });
 
     // Set current user name in app
-    top_bar.on('app.registered', function user() {
+    function currentUser() {
         top_bar.get('currentUser')
             .then((success) => {
                 userRecord = {
@@ -160,64 +184,4 @@
                 userID = userRecord.id
                 document.getElementById('currentUserLabel').innerHTML = userName
             })
-    })
-
-    // // This handles the events sent from the sidebar to topbar app
-    // function setSidebarEventHandler(instanceGuid, location) {
-    //     // Get sidebar app instance.
-    //     ticketSidebar = top_bar.instance(instanceGuid);
-    //     // Have sidebar app call top_bar app's "activeTab" event on sidebar's "app.activated" 
-    //     // and "app.deactivated" events.
-    //     ticketSidebar.on("app.activated", () => {
-    //         top_bar.trigger("activeTab",
-    //             `{"instanceGuid":"${instanceGuid}", "location": "${location}", "event":"activate"}`);
-    //     });
-    //     ticketSidebar.on("app.deactivated", () => {
-    //         top_bar.trigger("activeTab", '{"instanceGuid":"none", "location": "none", "event":"deactivate"}');
-    //     });
-    // }
-
-    // function displaySidebarInfo(instanceGuid, location) {
-    //     let ticketSidebar = top_bar.instance(instanceGuid);
-    //     // This code will be called on app.registered event of ticket.
-    //     ticketSidebar.get('ticket.id').then((result) => {
-    //         document.getElementById("sidebar_data").innerHTML = `Ticket ID: ${ticketID}`;
-    //     })
-    // }
-
-    // top_bar.on("app.registered", () => {
-    //     // Listen for event that sidebar apps will be sending.
-    //     top_bar.on("activeTab", (data) => {
-    //         let instance_info = JSON.parse(data);
-    //         displaySidebarInfo(instance_info.instanceGuid, instance_info.location, instance_info.event);
-
-    //     });
-
-    //     // Attach handler to existing sidebar instances.
-    //     top_bar.get("instances").then((data) => {
-    //         // var instanceGuids = Object.keys(data.instances);
-    //         Object.keys(data.instances).forEach((instanceGuid) => {
-    //             let location = data.instances[instanceGuid].location;
-    //             if (location === "ticket_sidebar") {
-    //                 setSidebarEventHandler(instanceGuid, location);
-    //                 // When first displaying agent UI, there should only be one app.
-    //                 displaySidebarInfo(instanceGuid, location);
-    //             }
-    //         });
-    //     });
-
-    //     // Attach handler to new sidebar instances.
-    //     top_bar.on("instance.created", (context) => {
-    //         let instanceGuid = context.instanceGuid;
-    //         let location = context.location;
-    //         if (location === "ticket_sidebar") {
-
-    //             setSidebarEventHandler(instanceGuid, location);
-
-    //             // Sidebar instances of the app are created when first displaying that ticket or user.
-    //             // Update display to new app instance's info.
-    //             displaySidebarInfo(instanceGuid, location);
-    //         }
-    //     });
-
-    // });
+    }
