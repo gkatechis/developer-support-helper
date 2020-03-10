@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
     <script src="https://static.zdassets.com/zendesk_app_framework_sdk/2.0/zaf_sdk.min.js"></script>
     <script src="main.js"></script>
     </script>
@@ -32,7 +33,7 @@
                     <label class="c-txt__label u-font-family-system u-fs-lg u-pt-xs">Developer Platform</label>
                 </div>
                 <div class="col-md-4 u-pt-sm" id="resetBtn">
-                    <input type="reset" value="Reset">
+                    <a href="#" onclick="deleteAllRecords()" id="addBtn">Reset</a>
                 </div>
                 <div class="col-md-4 u-pt-sm">
                     <label id=sidebar_data></label>

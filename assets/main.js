@@ -50,14 +50,15 @@
     function setTicketID(instanceGuid, location) {
         let ticketSidebar = top_bar.instance(instanceGuid);
         // This code will be called on app.registered event of ticket.
-        ticketSidebar.get('ticket.id').then((result) => {
-            ticketID = result["ticket.id"]
-            document.getElementById("sidebar_data").innerHTML = `Ticket ID: ${ticketID}`;
-            resetButtonInactive();
-            return ticketID
-        })
+        ticketSidebar.get('ticket.id')
+            .then((result) => {
+                ticketID = result["ticket.id"]
+                document.getElementById("sidebar_data").innerHTML = `Ticket ID: ${ticketID}`;
+            }).then((success) => {
+                resetButtonToggle()
+            })
     };
-     // Greg note: this along with "createTicketSidebar()" and "setTicketID()" is called from "top_bar.on("app.registered")"
+    // Greg note: this along with "createTicketSidebar()" and "setTicketID()" is called from "top_bar.on("app.registered")"
     function currentUser() {
         top_bar.get('currentUser')
             .then((success) => {
@@ -161,12 +162,14 @@
                                 top_bar.request(newRelationshipSettings)
                                     .then((success) => {
                                         // If that is successful, get the newly created relationship record ID
-                                        createdRelationshipRecordID = success.data.id
+                                        createdRelationshipRecordID = success.data.id;
                                         // Return the relationship record ID in the console
-                                        console.log("Successfully created relationship record: ", createdRelationshipRecordID)
+                                        console.log("Successfully created relationship record: ", createdRelationshipRecordID);
                                         // Show growler saying thanks for creating the records
                                         top_bar.invoke('notify', 'Records created, thanks for flagging the ticket!')
-                                        return createdRelationshipRecordID
+                                        // Toggle the reset button on so that the newly created record can be deleted
+                                        resetButtonToggle();
+                                        return createdRelationshipRecordID;
                                     })
                             })
                             .catch((error) => {
@@ -193,16 +196,70 @@
         });
     });
 
-    function resetButtonInactive() {
-        ticketSidebar.request(`/api/sunshine/objects/records/zen:ticket:${ticketID}/relationships/tix_to_devtixinfo`)
+    // This function toggles the reset button to hide or show depending on the existence of the relationship record on the ticket
+    function resetButtonToggle() {
+        top_bar.request(`/api/sunshine/objects/records/zen:ticket:${ticketID}/relationships/tix_to_devtixinfo`)
             .then((success) => {
-                if (success.data.length != 0) {
-                    console.log(success.data.length);
-                        document.getElementById("resetBtn").disabled = true;
-                        var x = document.getElementById("resetBtn").disabled;
-                    
+                if (success.data.length === 0) {
+                    $(document).ready(function () {
+                            let enabled = true;
+                            if (enabled) {
+                                $("a").removeAttr("href");
+                                document.getElementById("resetBtn").innerHTML = "No records exist to delete.";
+                                console.log("Reset button disabled")
+                            }
+                            enabled = !enabled;
+                        }
+
+                    )
                 } else {
-                    console.log("Carry on")
+                    // Couldn't get this figured out, I would just like to call this else statement when the record is created so that we can immediately show the "Reset" button the same way that the above is removed when it's deleted.
+                }
+
+            })
+    }
+
+    // This function is tied to the element with the id=resetBtn on iframe.html with an onclick event
+    function deleteAllRecords() {
+        // Check to see if a record exists with this ticket
+        top_bar.request(`/api/sunshine/objects/records/zen:ticket:${ticketID}/relationships/tix_to_devtixinfo`)
+            .then((success) => {
+                // We also would need to add the modal warning in here, which I have not yet started on.
+                if (success.data.length != 0) {
+                    // Gets the relationship and object record IDs
+                    let relationshipRecord = success.data[0].id
+                    let objectRecord = success.data[0].target
+                    // console.log("Ticket:tix_to_devtixinfo record ID: ", success.data[0].id, "and the target object ID: ", success.data[0].target)
+                    // Runs the delete relationship record function
+                    return top_bar.request(deleteRelationship(relationshipRecord))
+                        .then((success) => {
+                            // If successful, now we can delete the object record, so call that function
+                            return top_bar.request(deleteObject(objectRecord))
+                                .then((success) => {
+                                    // If both are successfully deleted, toggle the reset button off so that there is no option to delete again.
+                                    resetButtonToggle();
+                                })
+                        })
+
+                } else {
+                    console.log("No record exists")
                 }
             })
+    }
+
+    // Delete relationship record function
+    function deleteRelationship(relationshipRecord) {
+        return {
+            url: `/api/sunshine/relationships/records/${relationshipRecord}`,
+            type: 'DELETE',
+            contentType: 'application/json',
+        }
+    }
+    // Delete object record function
+    function deleteObject(objectRecord) {
+        return {
+            url: `/api/sunshine/objects/records/${objectRecord}`,
+            type: 'DELETE',
+            contentType: 'application/json',
+        }
     }
