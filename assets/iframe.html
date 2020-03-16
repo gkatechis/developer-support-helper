@@ -1,11 +1,10 @@
 <!DOCTYPE html>
+
 <html>
 
 <head>
-    <title>Developer Support ticket helper</title>
+    <title>Developer Support Ticket Helper</title>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="https://assets.zendesk.com/apps/sdk-assets/css/latest/zendesk_garden.css"
-        type="text/css">
     <link rel="stylesheet" href="main.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zendeskgarden/css-forms@7/dist/index.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@zendeskgarden/css-grid@0.1.36/dist/index.min.css">
@@ -17,7 +16,6 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
     <script src="https://static.zdassets.com/zendesk_app_framework_sdk/2.0/zaf_sdk.min.js"></script>
     <script src="main.js"></script>
     </script>
@@ -25,22 +23,21 @@
 
 <body>
 
-    <form enctype="multipart/form-data" method="POST" id="devHelper" name="devHelper">
+    <form enctype="multipart/form-data" id="main-form">
         <div class="container-fluid">
             <div class="row justify-content-between">
-                <!--Header + reset link-->
                 <div class="col-md-4">
                     <label class="c-txt__label u-font-family-system u-fs-lg u-pt-xs">Developer Platform</label>
                 </div>
                 <div class="col-md-4 u-pt-sm" id="resetBtn">
-                    <a href="#" onclick="deleteAllRecords()" id="addBtn">Reset</a>
+                    <a href="#" id="clear-button">Clear</a>
                 </div>
                 <div class="col-md-4 u-pt-sm">
                     <label id=sidebar_data></label>
                 </div>
             </div>
             <p>Writing code against the Zendesk Developer Platform. Select most significant area.</p>
-            <hr class="customHR">
+            <hr class="custom-line">
         </div>
         </div>
         <div class="container-fluid">
@@ -50,32 +47,32 @@
                     <legend class="c-txt__label u-mt-xs ">APIs</legend>
                     <div class="u-mb-xxs">
                         <div>
-                            <input class="c-chk__input" id="id-100" name="devPlatform" type="radio" value="100">
+                            <input class="c-chk__input" id="id-100" name="feature-area" type="radio" value="100">
                             <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-100">Support
                                 API</label>
                         </div>
                         <div>
-                            <input class="c-chk__input" id="id-101" name="devPlatform" type="radio" value="101">
+                            <input class="c-chk__input" id="id-101" name="feature-area" type="radio" value="101">
                             <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-101">Chat
                                 API</label>
                         </div>
                         <div>
-                            <input class="c-chk__input" id="id-102" name="devPlatform" type="radio" value="102">
+                            <input class="c-chk__input" id="id-102" name="feature-area" type="radio" value="102">
                             <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-102">Talk
                                 API</label>
                         </div>
                         <div>
-                            <input class="c-chk__input" id="id-103" name="devPlatform" type="radio" value="103">
+                            <input class="c-chk__input" id="id-103" name="feature-area" type="radio" value="103">
                             <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-103">Chat
                                 Conversations API</label>
                         </div>
                         <div>
-                            <input class="c-chk__input" id="id-104" name="devPlatform" type="radio" value="104">
+                            <input class="c-chk__input" id="id-104" name="feature-area" type="radio" value="104">
                             <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-104">Guide
                                 API</label>
                         </div>
                         <div>
-                            <input class="c-chk__input" id="id-105" name="devPlatform" type="radio" value="105">
+                            <input class="c-chk__input" id="id-105" name="feature-area" type="radio" value="105">
                             <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-105">Sell
                                 API</label>
                         </div>
@@ -86,26 +83,26 @@
                     <legend class="c-txt__label u-mt-xs">Mobile SDKs</legend>
                     <div class="u-mb-xxs">
                         <div>
-                            <input class="c-chk__input" id="id-140" name="devPlatform" type="radio" value="140">
+                            <input class="c-chk__input" id="id-140" name="feature-area" type="radio" value="140">
                             <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-140">Chat
                                 SDK -
                                 iOS</label>
                         </div>
                         <div>
-                            <input class="c-chk__input" id="id-141" name="devPlatform" type="radio" value="141">
+                            <input class="c-chk__input" id="id-141" name="feature-area" type="radio" value="141">
                             <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-141">Chat
                                 SDK -
                                 Android</label>
                         </div>
                         <div>
-                            <input class="c-chk__input" id="id-142" name="devPlatform" type="radio" value="142">
+                            <input class="c-chk__input" id="id-142" name="feature-area" type="radio" value="142">
                             <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-142">Support
                                 SDK
                                 -
                                 iOS</label>
                         </div>
                         <div>
-                            <input class="c-chk__input" id="id-143" name="devPlatform" type="radio" value="143">
+                            <input class="c-chk__input" id="id-143" name="feature-area" type="radio" value="143">
                             <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-143">Support
                                 SDK -
                                 Android</label>
@@ -117,37 +114,37 @@
                     <legend class="c-txt__label u-mt-xs ">Other</legend>
                     <div class="u-mb-xxs">
                         <div>
-                            <input class="c-chk__input" id="id-200" name="devPlatform" type="radio" value="200">
+                            <input class="c-chk__input" id="id-200" name="feature-area" type="radio" value="200">
                             <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-200">Sponsored
                                 dev
                                 account</label>
                         </div>
                         <div>
-                            <input class="c-chk__input" id="id-201" name="devPlatform" type="radio" value="201">
+                            <input class="c-chk__input" id="id-201" name="feature-area" type="radio" value="201">
                             <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-201">Getting
                                 app
                                 published</label>
                         </div>
                         <div>
-                            <input class="c-chk__input" id="id-202" name="devPlatform" type="radio" value="202">
+                            <input class="c-chk__input" id="id-202" name="feature-area" type="radio" value="202">
                             <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-202">Global
                                 OAuth
                                 client
                             </label>
                         </div>
                         <div>
-                            <input class="c-chk__input" id="id-203" name="devPlatform" type="radio" value="203">
+                            <input class="c-chk__input" id="id-203" name="feature-area" type="radio" value="203">
                             <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-203">API
                                 Clients</label>
                         </div>
                         <div>
-                            <input class="c-chk__input" id="id-204" name="devPlatform" type="radio" value="204">
+                            <input class="c-chk__input" id="id-204" name="feature-area" type="radio" value="204">
                             <label class="c-chk__label c-chk__label--radio c-chk__label--regular"
                                 for="id-204">Guide/Gather
                                 customization</label>
                         </div>
                         <div>
-                            <input class="c-chk__input" id="id-205" name="devPlatform" type="radio" value="205">
+                            <input class="c-chk__input" id="id-205" name="feature-area" type="radio" value="205">
                             <label class="c-chk__label c-chk__label--radio c-chk__label--regular"
                                 for="id-205">Other</label>
                         </div>
@@ -162,17 +159,17 @@
                     <legend class="c-txt__label u-mt-xs">Apps Framework development</legend>
                     <div class="u-mb-xxs">
                         <div>
-                            <input class="c-chk__input" id="id-120" name="devPlatform" type="radio" value="120">
+                            <input class="c-chk__input" id="id-120" name="feature-area" type="radio" value="120">
                             <label class="c-chk__label c-chk__label--radio c-chk__label--regular"
                                 for="id-120">Support</label>
                         </div>
                         <div>
-                            <input class="c-chk__input" id="id-121" name="devPlatform" type="radio" value="121">
+                            <input class="c-chk__input" id="id-121" name="feature-area" type="radio" value="121">
                             <label class="c-chk__label c-chk__label--radio c-chk__label--regular"
                                 for="id-121">Chat</label>
                         </div>
                         <div>
-                            <input class="c-chk__input" id="id-122" name="devPlatform" type="radio" value="122">
+                            <input class="c-chk__input" id="id-122" name="feature-area" type="radio" value="122">
                             <label class="c-chk__label c-chk__label--radio c-chk__label--regular"
                                 for="id-122">Sell</label>
                         </div>
@@ -183,23 +180,23 @@
                     <legend class="c-txt__label u-mt-xs">Sunshine</legend>
                     <div class="u-mx-xxs">
                         <div>
-                            <input class="c-chk__input" id="id-160" name="devPlatform" type="radio" value="160">
+                            <input class="c-chk__input" id="id-160" name="feature-area" type="radio" value="160">
                             <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-160">Custom
                                 Objects</label>
                         </div>
                         <div>
-                            <input class="c-chk__input" id="id-161" name="devPlatform" type="radio" value="161">
+                            <input class="c-chk__input" id="id-161" name="feature-area" type="radio" value="161">
                             <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-161">Events
                                 and
                                 Profiles</label>
                         </div>
                         <div>
-                            <input class="c-chk__input" id="id-162" name="devPlatform" type="radio" value="162">
+                            <input class="c-chk__input" id="id-162" name="feature-area" type="radio" value="162">
                             <label class="c-chk__label c-chk__label--radio c-chk__label--regular"
                                 for="id-162">Conversations</label>
                         </div>
                         <div>
-                            <input class="c-chk__input" id="id-163" name="devPlatform" type="radio" value="163">
+                            <input class="c-chk__input" id="id-163" name="feature-area" type="radio" value="163">
                             <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-163">AWS
                                 Events
                                 BridgeChannels Framework</label>
@@ -211,12 +208,12 @@
                     <legend class="c-txt__label u-mt-xs">Widget</legend>
                     <div class="u-mb-xxs">
                         <div>
-                            <input class="c-chk__input" id="id-180" name="devPlatform" type="radio" value="180">
+                            <input class="c-chk__input" id="id-180" name="feature-area" type="radio" value="180">
                             <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-180">Widget
                                 API</label>
                         </div>
                         <div>
-                            <input class="c-chk__input" id="id-181" name="devPlatform" type="radio" value="181">
+                            <input class="c-chk__input" id="id-181" name="feature-area" type="radio" value="181">
                             <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="id-181">Web
                                 SDK</label>
                         </div>
@@ -226,12 +223,12 @@
         </div>
         <!--Additional comments/other platform tools-->
         <div class="container-fluid">
-            <hr class="customHR">
+            <hr class="custom-line">
             <div class="row u-pt-xs">
                 <div class="col-xl">
                     <div class="c-txt">
-                        <label class="c-txt__label" for="addlTxt">Additional info</label>
-                        <input class="c-txt__input" id="addlTxt" type="text" name="addInfo"
+                        <label class="c-txt__label" for="additional-info">Additional info</label>
+                        <input class="c-txt__input" id="additional-info" type="text" name="additional-info"
                             placeholder="Add any additional comments here">
                     </div>
                 </div>
@@ -246,35 +243,35 @@
                 <div class="row u-pl-sm u-pt-lg">
                     <div class="col-">
                         <div class="u-pl-sm u-pt-xxs">
-                            <input class="c-chk__input" id="complexity1" name="devComplexity" type="radio" value="1">
+                            <input class="c-chk__input" id="complexity1" name="complexity-rating" type="radio" value="1">
                             <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="complexity1">1
                             </label>
                         </div>
                     </div>
                     <div class="col-">
                         <div class="u-pl-sm u-pt-xxs">
-                            <input class="c-chk__input" id="complexity2" name="devComplexity" type="radio" value="2">
+                            <input class="c-chk__input" id="complexity2" name="complexity-rating" type="radio" value="2">
                             <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="complexity2">2
                             </label>
                         </div>
                     </div>
                     <div class="col-">
                         <div class="u-pl-sm u-pt-xxs">
-                            <input class="c-chk__input" id="complexity3" name="devComplexity" type="radio" value="3">
+                            <input class="c-chk__input" id="complexity3" name="complexity-rating" type="radio" value="3">
                             <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="complexity3">3
                             </label>
                         </div>
                     </div>
                     <div class="col-">
                         <div class="u-pl-sm u-pt-xxs">
-                            <input class="c-chk__input " id="complexity4" name="devComplexity" type="radio" value="4">
+                            <input class="c-chk__input " id="complexity4" name="complexity-rating" type="radio" value="4">
                             <label class="c-chk__label c-chk__label--radio c-chk__label--regular " for="complexity4">4
                             </label>
                         </div>
                     </div>
                     <div class="col-">
                         <div class="u-pl-sm u-pt-xxs">
-                            <input class="c-chk__input" id="complexity5" name="devComplexity" type="radio" value="5">
+                            <input class="c-chk__input" id="complexity5" name="complexity-rating" type="radio" value="5">
                             <label class="c-chk__label c-chk__label--radio c-chk__label--regular" for="complexity5">5
                             </label>
                         </div>
@@ -285,7 +282,7 @@
                     <div class="container-fluid">
                         <div class="c-txt u-pt-sm u-pl-sm u-bg-kale-150">
                             <small class="c-txt__hint">Set by:</small>
-                            <label class="c-txt__label" id="currentUserLabel"></label>
+                            <label class="c-txt__label" id="complexity-user-label"></label>
                         </div>
                     </div>
                 </div>
@@ -295,15 +292,38 @@
         <div class="row">
             <div class="col-xl">
                 <div class="l-btn-group float-right u-pr-sm u-pb-sm u-pt-sm">
-                    <input type="button" class="c-btn c-btn--sm c-btn--pill c-btn--primary" value="Save"
-                        onclick="saveButton()">
-                    <button class="c-btn c-btn--sm c-btn--pill c-btn--muted"><strong
-                            class="u-semibold">Cancel</strong></button>
+                    <button id="apply-button" class="c-btn c-btn--sm c-btn--pill c-btn--primary">Apply</button>
+                    <button id="discard-button" class="c-btn c-btn--sm c-btn--pill c-btn--muted">Discard</button>
                 </div>
             </div>
         </div>
     </form>
 
-</body>
+    <script>
 
+    $(document).ready(() => {
+      $('#clear-button').click((e) => {
+        console.log('clear clicked')
+        clearButtonClicked()
+      })
+
+      $('#apply-button').click((e) => {
+          e.preventDefault()
+          console.log('ok clicked')
+          applyButtonClicked()
+      })
+
+      $('#discard-button').click((e) => {
+          e.preventDefault()
+          console.log('discard-button clicked')
+          discardButtonClicked()
+      })
+
+      $('main-form').submit((e) => {
+        e.preventDefault()
+        console.log("form submit")
+      })
+    })
+    </script>
+</body>
 </html>

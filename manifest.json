@@ -1,7 +1,7 @@
 {
-  "name": "Developer Support ticket helper",
+  "name": "Developer Support Ticket Helper",
   "author": {
-    "name": "Developer Support team",
+    "name": "Developer Support Team",
     "email": "gkatechis@zendesk.com",
     "url": ""
   },
@@ -18,10 +18,10 @@
       },
       "ticket_sidebar": {
         "autoLoad": false
-      }
+      },
+      "background": "assets/background.html"
     }
   },
-  
   "version": "1.0",
   "frameworkVersion": "2.0"
 }

@@ -1,8 +1,8 @@
 {
   "app": {
-    "name": "Developer Support ticket helper",
-    "short_description": "Allows agents to record the developer platform tool in use on each ticket.",
+    "name": "Developer Support Ticket Helper",
+    "short_description": "Allows agents to record the Zendesk Developer Platform area of a ticket.",
     "long_description": "Utilizing custom resources (created upon install), you can now track the developer platform tools that requesters are using without having to rely on the Product Area field",
-    "installation_instructions": "Click the install button!"
+    "installation_instructions": "Click Install. The app will appear in the top bar area."
   }
 }

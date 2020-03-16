@@ -1,265 +1,303 @@
-    var top_bar = ZAFClient.init();
+// Display user that set complexity
+  // .then((userRecord) => {
+  //   userName = userRecord.name
+  //   userID = userRecord.id
+  //   document.getElementById('complexity-user-label').innerHTML = userName
+  // })
+// Display user that last udpated record (in footer, greyed out)
+// Test: on new ticket
 
-    let devPlatformValue;
-    let complexityValue;
-    let addInfoValue;
-    let userName;
-    let userID;
-    let createdRelationshipRecordID;
-    let ticketID;
-    let newObjectRecord;
 
-    // Greg note: this is the first thing that is running
-    top_bar.on("app.registered", () => {
-        currentUser();
-        // Listen for event that sidebar apps will be sending.
-        top_bar.on("activeTab", (data) => {
-            let instance_info = JSON.parse(data);
-            currentUser();
-            createTicketSidebar(instance_info.instanceGuid, instance_info.location, instance_info.event);
-        });
+var top_bar = ZAFClient.init();
 
-        // Attach handler to existing sidebar instances.
-        top_bar.get("instances").then((data) => {
-            // var instanceGuids = Object.keys(data.instances);
-            Object.keys(data.instances).forEach((instanceGuid) => {
-                let location = data.instances[instanceGuid].location;
-                if (location === "ticket_sidebar") {
-                    createTicketSidebar(instanceGuid, location);
-                    // When first displaying agent UI, there should only be one app.
-                    setTicketID(instanceGuid, location);
-                }
-            });
-        });
+let featureAreaValue;
+let complexityValue;
+let addInfoValue;
+let userName;
+let userID;
+let createdRelationshipRecordID;
+let newObjectRecord;
 
-        // Attach handler to new sidebar instances.
-        top_bar.on("instance.created", (context) => {
-            let instanceGuid = context.instanceGuid;
-            let location = context.location;
-            if (location === "ticket_sidebar") {
-                createTicketSidebar(instanceGuid, location);
-                // Sidebar instances of the app are created when first displaying that ticket or user.
-                // Update display to new app instance's info.
-                setTicketID(instanceGuid, location);
-            }
-        });
-    });
+let ticketID;
+let currentUserInfo
+let appFieldIDs
+let ticketInfo
+let activeTicketSidebarClientInstance
 
-    // This sets the ticket ID
-    // Greg note: this along with "setSidebarEventHandler()" and "currentUser()" is called from "top_bar.on("app.registered")"
-    function setTicketID(instanceGuid, location) {
-        let ticketSidebar = top_bar.instance(instanceGuid);
-        // This code will be called on app.registered event of ticket.
-        ticketSidebar.get('ticket.id')
-            .then((result) => {
-                ticketID = result["ticket.id"]
-                document.getElementById("sidebar_data").innerHTML = `Ticket ID: ${ticketID}`;
-            }).then((success) => {
-                resetButtonToggle()
-            })
-    };
-    // Greg note: this along with "createTicketSidebar()" and "setTicketID()" is called from "top_bar.on("app.registered")"
-    function currentUser() {
-        top_bar.get('currentUser')
-            .then((success) => {
-                userRecord = {
-                    name: success.currentUser.name,
-                    id: success.currentUser.id
-                }
-                return userRecord
-            })
-            .then((userRecord) => {
-                userName = userRecord.name
-                userID = userRecord.id
-                document.getElementById('currentUserLabel').innerHTML = userName
-            })
+let developerSupportArea = 10
+let app_field_IDs = {}
+let ticket_info = {}
+
+
+// Greg note: this is the first thing that is running
+top_bar.on("app.registered", async () => {
+
+  await getCurrentUser().then((userInfo) => {
+    console.log("debug - currentUserInfo:", userInfo)
+    currentUserInfo = userInfo
+  })
+
+  // Get custom field IDs. These will be used to get/set rating information.
+  await getAppTicketFieldIds().then((data) => {
+    console.log("debug - custom fields:", data)
+    appFieldIDs = data
+  })
+
+  // Listen for event that sidebar apps will be sending.
+  top_bar.on("activeTab", (eventData) => {
+    let eventInfo = JSON.parse(eventData);
+    console.log("debug - ticketSidebar event receive:", eventInfo)
+    if (eventInfo.event === "activate") {
+      activeTicketSidebarClientInstance = top_bar.instance(eventInfo.instanceGuid)
+      getDisplayedTicketInfo()
+        .then((result) => {
+          setCurrentTicketInfo(result)
+          setFormData()
+          top_bar.invoke('show')
+          document.getElementById("sidebar_data").innerHTML = `Ticket ID: ${getCurrentTicketId()}`
+        })
+    } else {
+      // Ticket sidebar app has be deactivated.
+      // User moved off of ticket. Clear ticket context and close top_bar app.
+      blankAllTicketInfo()
+      top_bar.invoke('hide')
     }
+  })
 
-    // Greg note: this along with "createTicketSidebar" and "currentUser()" is called from "top_bar.on("app.registered")"
-    // This handles the events sent from the sidebar to topbar app
-    function createTicketSidebar(instanceGuid, location) {
-        // Get sidebar app instance.
-        ticketSidebar = top_bar.instance(instanceGuid);
-        // Have sidebar app call top_bar app's "activeTab" event on sidebar's "app.activated" and "app.deactivated" events.
-        ticketSidebar.on("app.activated", () => {
-            top_bar.trigger("activeTab",
-                `{"instanceGuid":"${instanceGuid}", "location": "${location}", "event":"activate"}`);
-        });
-        ticketSidebar.on("app.deactivated", () => {
-            top_bar.trigger("activeTab", '{"instanceGuid":"none", "location": "none", "event":"deactivate"}');
-        });
+  // Attach event handlers to existing sidebar instances.
+  top_bar.get("instances").then((data) => {
+    Object.keys(data.instances).forEach((instanceGuid) => {
+      let location = data.instances[instanceGuid].location
+      if (location === "ticket_sidebar") {
+        createTicketSidebarEventHandlers(instanceGuid, location)
+        activeTicketSidebarClientInstance = top_bar.instance(instanceGuid)
+        getDisplayedTicketInfo().then((result) => {
+          setCurrentTicketInfo(result)
+          document.getElementById("sidebar_data").innerHTML = `Ticket ID: ${getCurrentTicketId()}`
+        })
+      }
+    })
+  })
+
+  // Attach event handlers to new sidebar instances.
+  top_bar.on("instance.created", (context) => {
+    let instanceGuid = context.instanceGuid;
+    let location = context.location;
+    if (location === "ticket_sidebar") {
+      console.log("debug - ticketSidebar instance.created")
+      createTicketSidebarEventHandlers(instanceGuid, location)
+      // Sidebar instances of the app are created when first displaying that ticket or user.
+      // Update display to new app instance's info.
+      activeTicketSidebarClientInstance = top_bar.instance(instanceGuid)
+      getDisplayedTicketInfo().then((result) => {
+        setCurrentTicketInfo(result)
+        setFormData()
+        document.getElementById("sidebar_data").innerHTML = `Ticket ID: ${getCurrentTicketId()}`
+        top_bar.invoke('show')
+      })
     }
+  })
 
-    // Sets devtixinfo object values, passes into saveButton(), then creates new object record
-    function createObjectData() {
-        newObjectRecord = {
-            data: {
-                type: "devtixinfo",
-                attributes: {
-                    dev_platform_feature: parseInt(devPlatformValue),
-                    complexity_rating: 0,
-                    complexity_rating_user_id: userID,
-                    additional_info: addInfoValue,
-                    ticket_id: ticketID
-                }
-            }
-        }
-        return {
-            url: '/api/sunshine/objects/records',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(newObjectRecord)
-        }
-    }
-    // Sets tix_to_devtixino relationship values, passed into saveButton(), then creates new relationship record
-    function createRecordData() {
-        let newRelationshipRecord = {
-            data: {
-                relationship_type: "tix_to_devtixinfo",
-                source: `zen:ticket:${ticketID}`,
-                target: createdObjectRecordID
-            }
-        }
-        return {
-            url: '/api/sunshine/relationships/records',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(newRelationshipRecord)
-        }
-    }
 
-    // This is the call to check to see if an existing relationship record already exists for the ticket.
-    function getRecordData() {
-        return top_bar.request(`/api/sunshine/objects/records/zen:ticket:${ticketID}/relationships/tix_to_devtixinfo`)
-    }
+  top_bar.on('pane.activated', () => {
+    console.log("pane.activated")
+    getDisplayedTicketInfo()
+    setFormData()
+  })
 
-    // Check if relationship record exists for ticket already, if not, creates object record and then relationship record
-    function saveButton() {
-        // When attempting to save, if a dev platform selection is not made, halt the rest and return a growler notification.
-        if (!$("input[name='devPlatform']:checked").val()) {
-            top_bar.invoke('notify', 'Please select a platform tool before saving.', 'error')
-        } else {
-            // Does the relationship already exist?
-            getRecordData()
-                .then((success) => {
-                    // This if checks to see if the promise array returns a value indicating that there is an existing relationship. If one exists, this value would be 1 (or possibly more))
-                    if (success.data.length === 0) {
-                        // Get the additional text value
-                        addInfoValue = document.getElementById("addlTxt").value;
-                        // Create new object record with the selected form options 
-                        top_bar.request(createObjectData())
-                            .then((success) => {
-                                // If the object record is successfully created, get the newly created object record ID
-                                createdObjectRecordID = success.data.id
-                                // Return the object record ID in the console
-                                console.log("Successfully created record: ", createdObjectRecordID)
-                                // set the createRecordData function to a variable so that it can be called in the top_bar request next
-                                newRelationshipSettings = createRecordData()
-                                return createdObjectRecordID
-                            })
-                            .then(() => {
-                                // Once the object record ID that was created is saved, then create a new relationship record with that object record ID
-                                top_bar.request(newRelationshipSettings)
-                                    .then((success) => {
-                                        // If that is successful, get the newly created relationship record ID
-                                        createdRelationshipRecordID = success.data.id;
-                                        // Return the relationship record ID in the console
-                                        console.log("Successfully created relationship record: ", createdRelationshipRecordID);
-                                        // Show growler saying thanks for creating the records
-                                        top_bar.invoke('notify', 'Records created, thanks for flagging the ticket!')
-                                        // Toggle the reset button on so that the newly created record can be deleted
-                                        resetButtonToggle();
-                                        return createdRelationshipRecordID;
-                                    })
-                            })
-                            .catch((error) => {
-                                console.log(error)
-                            })
-                    } else {
-                        // If relationship already exists, return both the relationship record ID, as well as the object record ID (noted)
-                        console.log("Relationship already exists, here's the relationship record: ", success.data[0].id, "and here's the target object ID: ", success.data[0].target)
-                        // Show growler saying that the record already exists and how to find that information in the console.
-                        top_bar.invoke('notify', 'Relationship record already exists. Check dev console for IDs', 'alert')
-                    }
-                })
-                .catch(error => {
-                    console.log("Relationship record creation failed with error ", error)
-                })
-        }
-    };
 
-    // Get radio button values from form
-    $(function () {
-        $("input:radio[name*='dev']").click(function () {
-            devPlatformValue = $("input[type=radio][name=devPlatform]:checked").val();
-            complexityValue = $("input[type=radio][name=devComplexity]:checked").val();
-        });
-    });
+  top_bar.on('pane.deactivated', () => {
+    console.log("pane.deactivated")
+    // 
+  })
 
-    // This function toggles the reset button to hide or show depending on the existence of the relationship record on the ticket
-    function resetButtonToggle() {
-        top_bar.request(`/api/sunshine/objects/records/zen:ticket:${ticketID}/relationships/tix_to_devtixinfo`)
-            .then((success) => {
-                if (success.data.length === 0) {
-                    $(document).ready(function () {
-                            let enabled = true;
-                            if (enabled) {
-                                $("a").removeAttr("href");
-                                document.getElementById("resetBtn").innerHTML = "No records exist to delete.";
-                                console.log("Reset button disabled")
-                            }
-                            enabled = !enabled;
-                        }
+})
 
-                    )
-                } else {
-                    // Couldn't get this figured out, I would just like to call this else statement when the record is created so that we can immediately show the "Reset" button the same way that the above is removed when it's deleted.
-                }
 
-            })
-    }
+// This sets up ticket sidebar events that, when fired, will send information to the top_bar instance.
+function createTicketSidebarEventHandlers(instanceGuid, location) {
+  // Get sidebar app instance.
+  let ticketSidebar = top_bar.instance(instanceGuid)
+  
+  // Have sidebar app call top_bar app's "activeTab" event on sidebar's "app.activated" and "app.deactivated" events.
+  ticketSidebar.on("app.activated", () => {
+    console.log("debug - ticketSidebar app.activiated - trigger send")
+    top_bar.trigger("activeTab",
+      `{"instanceGuid":"${instanceGuid}", "location": "${location}", "event":"activate"}`)
+  })
 
-    // This function is tied to the element with the id=resetBtn on iframe.html with an onclick event
-    function deleteAllRecords() {
-        // Check to see if a record exists with this ticket
-        top_bar.request(`/api/sunshine/objects/records/zen:ticket:${ticketID}/relationships/tix_to_devtixinfo`)
-            .then((success) => {
-                // We also would need to add the modal warning in here, which I have not yet started on.
-                if (success.data.length != 0) {
-                    // Gets the relationship and object record IDs
-                    let relationshipRecord = success.data[0].id
-                    let objectRecord = success.data[0].target
-                    // console.log("Ticket:tix_to_devtixinfo record ID: ", success.data[0].id, "and the target object ID: ", success.data[0].target)
-                    // Runs the delete relationship record function
-                    return top_bar.request(deleteRelationship(relationshipRecord))
-                        .then((success) => {
-                            // If successful, now we can delete the object record, so call that function
-                            return top_bar.request(deleteObject(objectRecord))
-                                .then((success) => {
-                                    // If both are successfully deleted, toggle the reset button off so that there is no option to delete again.
-                                    resetButtonToggle();
-                                })
-                        })
+  ticketSidebar.on("app.deactivated", () => {
+    console.log("debug - ticketSidebar app.deactivated - trigger send")
+    top_bar.trigger("activeTab", '{"instanceGuid":"none", "location": "none", "event":"deactivate"}')
+  })
+}
 
-                } else {
-                    console.log("No record exists")
-                }
-            })
-    }
 
-    // Delete relationship record function
-    function deleteRelationship(relationshipRecord) {
-        return {
-            url: `/api/sunshine/relationships/records/${relationshipRecord}`,
-            type: 'DELETE',
-            contentType: 'application/json',
-        }
-    }
-    // Delete object record function
-    function deleteObject(objectRecord) {
-        return {
-            url: `/api/sunshine/objects/records/${objectRecord}`,
-            type: 'DELETE',
-            contentType: 'application/json',
-        }
-    }
+function getDisplayedTicketInfo() {  
+  return activeTicketSidebarClientInstance
+    .get([
+      `ticket.customField:custom_field_${appFieldIDs.area}`,
+      `ticket.customField:custom_field_${appFieldIDs.feature}`,
+      `ticket.customField:custom_field_${appFieldIDs.complexity_rating}`,
+      `ticket.customField:custom_field_${appFieldIDs.rating_user_id}`,
+      `ticket.customField:custom_field_${appFieldIDs.additional_info}`,
+      `ticket.customField:custom_field_${appFieldIDs.updated_by_user_id}`,
+      'ticket.id'
+    ])
+    .then((result) => {
+      console.log("debug - Ticket Info:", result)
+      return result
+    })
+    .catch((error) => {
+      console.error("debug - ERROR getDisplayedTicketInfo:", error)
+    })
+}
+
+
+function blankAllTicketInfo() {
+  setCurrentTicketInfo(null)
+}
+
+
+function getCurrentUser() {
+  return top_bar.get('currentUser').then((result) => {
+    return {id: result.currentUser.id, email: result.currentUser.email, name: result.currentUser.name}
+  })
+}
+
+
+function setCurrentTicketInfo(ticketInfo) {
+  if (ticketInfo == null) {
+    ticket_info["ticket.id"] = null
+    ticket_info["area"] = null
+    ticket_info["feature"] = null
+    ticket_info["complexity_rating"] = null
+    ticket_info["rating_user_id"] = null
+    ticket_info["additional_info"] = null
+    ticket_info["updated_by_user_id"] = null
+    activeTicketSidebarClientInstance = null
+  } else {  
+    ticket_info["ticket.id"] = ticketInfo["ticket.id"]
+    ticket_info["area"] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.area}`]
+    ticket_info["feature"] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.feature}`]
+    ticket_info["complexity_rating"] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.complexity_rating}`]
+    ticket_info["rating_user_id"] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.rating_user_id}`]
+    ticket_info["additional_info"] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.additional_info}`]
+    ticket_info["updated_by_user_id"] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.updated_by_user_id}`]
+
+    console.log('setCurrentTicketInfo:', ticket_info)
+    // TODO: Get 'Set By' user name
+    // TODO: Get 'updated by' user name
+  }
+}
+
+
+function setFormData() {
+
+  if (ticket_info["feature"] != null)
+    $(`#id-${ticket_info["feature"]}`).prop('checked', true) 
+  else 
+    $('input[name=feature-area]').prop('checked', false)
+
+  if (ticket_info["complexity_rating"] != null) 
+    $(`#complexity${ticket_info["complexity_rating"]}`).prop('checked', true)
+  else
+    $('input[name=complexity-rating]').prop('checked', false)
+
+  if (ticket_info["rating_user_id"] != null)
+    $('#complexity-user-label').text(ticket_info["rating_user_id"])
+  else
+    $('#complexity-user-label').text('')
+
+  if (ticket_info["additional_info"] != null)
+    $('#additional-info').val(ticket_info["additional_info"])
+  else
+    $('#additional-info').val('')
+
+  // Will show 'value' attribute of checked radio button.
+  // let y = $("input[name=feature-area]:checked").val())
+  // $(`#id-${y}`).prop('checked', true)
+
+  // Radio button
+  //  $("input[name=feature-area]").val(ticket_info["area"])
+  //!$("input[name='feature-area']:checked").val())
+
+}
+
+
+function getCurrentTicketId() {
+  return ticket_info["ticket.id"]
+}
+
+
+function getAppTicketFieldIds() {
+  return top_bar.request('/api/v2/ticket_fields').then((data) => {
+    let custom_fields = data.ticket_fields.filter((field) => /dsapp_/.test(field.title))
+    let appFieldIDs = {}
+    custom_fields.forEach((field) => {
+      appFieldIDs[field.title.substr(6)] = field.id
+    })
+    return appFieldIDs
+  })
+}
+
+
+// ================================================================================================
+
+function clearButtonClicked() {
+  ticket_info["area"] = null
+  ticket_info["feature"] = null
+  ticket_info["complexity_rating"] = null
+  ticket_info["rating_user_id"] = null
+  ticket_info["additional_info"] = null
+  ticket_info["updated_by_user_id"] = null
+
+  // Reset HTML values
+  $('#additional-info').val('')
+  $('#complexity-user-label').text('')
+  $('input[name=feature-area]').prop('checked', false)
+  $("input[name=complexity-rating]").prop('checked',false)
+}
+
+
+function applyButtonClicked() {  
+  // console.log("XXX:", $('#additional-info').val() ? $('#additional-info').val() : null)
+  // TODO -- get user IDs for complexity rating and who's doing updating.
+
+  // Get values from HTML
+  ticket_info["area"] = developerSupportArea
+  ticket_info["feature"] = $('input:radio[name=feature-area]:checked').val() ? $('input:radio[name=feature-area]:checked').val() : null
+  ticket_info["complexity_rating"] = $("input[name=complexity-rating]:checked").val() ? $("input[name=complexity-rating]:checked").val() : null
+  ticket_info["rating_user_id"] = ticket_info["complexity_rating"] == null ? null : 123456
+  ticket_info["additional_info"] = $('#additional-info').val() ? $('#additional-info').val() : null
+  ticket_info["updated_by_user_id"] = 222222
+
+  console.log('ticket_info:', ticket_info)
+
+  activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.area}`, ticket_info["area"])
+  activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.feature}`, ticket_info["feature"])
+  activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.complexity_rating}`, ticket_info["complexity_rating"])
+  activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.rating_user_id}`, ticket_info["rating_user_id"])
+  activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.additional_info}`, ticket_info["additional_info"])
+  activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.updated_by_user_id}`, ticket_info["updated_by_user_id"])
+
+  top_bar.invoke('popover', 'hide')
+  // ticket_info["area"] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.area}`]
+  // ticket_info["feature"] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.feature}`]
+  // ticket_info["complexity_rating"] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.complexity_rating}`]
+  // ticket_info["rating_user_id"] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.rating_user_id}`]
+  // ticket_info["additional_info"] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.additional_info}`]
+  // ticket_info["updated_by_user_id"] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.updated_by_user_id}`]
+}
+
+
+function discardButtonClicked() {
+
+  // Just don't save what the form values are set to.
+  // Reset form values to original
+  // TODO: top_bar activate should re-read ticket info and populate form.
+
+
+  top_bar.invoke('popover', 'hide')
+
+}
