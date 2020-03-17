@@ -8,6 +8,8 @@
 //   Figure out to avoid scrolling in app's window from instance to instance
 //   Add hot keys?
 //   Consider modification: Just capture category (i.e. API, Mobile SDK, ZAF, etc -- is nuance needed?)
+//   BUG: Expecting null back on empty fields and getting empty string (i.e. not null) -- so messing up other logic.
+//        Set ticket values, save ticket, select 'Clear', save ticket -- ticket values are now "" vs. null
 
 
 // ================================================================================================
