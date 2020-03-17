@@ -203,12 +203,12 @@
 		"basic": [
 			{
 				"key": "password",
-				"value": "InfoSupport",
+				"value": "",
 				"type": "string"
 			},
 			{
 				"key": "username",
-				"value": "bflynn@zendesk.com",
+				"value": "",
 				"type": "string"
 			}
 		]
