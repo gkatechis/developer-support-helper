@@ -1,24 +1,24 @@
-// Display user that set complexity
-  // .then((userRecord) => {
-  //   userName = userRecord.name
-  //   userID = userRecord.id
-  //   document.getElementById('complexity-user-label').innerHTML = userName
-  // })
-// Display user that last udpated record (in footer, greyed out)
-// Test: on new ticket
+// ================================================================================================
+// TODO
+// ================================================================================================
+//   Display user that last udpated record (in footer, greyed out)
+//   Test on new ticket
+//   Create an Explore report and/or Google sheet report
+//   Throw error is required custom fields do not exist. Let user know about Postman collection.
+//   Figure out to avoid scrolling in app's window from instance to instance
+//   Add hot keys?
+//   Consider modification: Just capture category (i.e. API, Mobile SDK, ZAF, etc -- is nuance needed?)
 
+
+// ================================================================================================
+// App initialization and setup
+// ================================================================================================
 
 var top_bar = ZAFClient.init();
 
-let featureAreaValue;
-let complexityValue;
-let addInfoValue;
 let userName;
 let userID;
-let createdRelationshipRecordID;
-let newObjectRecord;
 
-let ticketID;
 let currentUserInfo
 let appFieldIDs
 let ticketInfo
@@ -28,8 +28,7 @@ let developerSupportArea = 10
 let app_field_IDs = {}
 let ticket_info = {}
 
-
-// Greg note: this is the first thing that is running
+// Greg note: this is the first thing that is run
 top_bar.on("app.registered", async () => {
 
   await getCurrentUser().then((userInfo) => {
@@ -54,7 +53,7 @@ top_bar.on("app.registered", async () => {
           setCurrentTicketInfo(result)
           setFormData()
           top_bar.invoke('show')
-          document.getElementById("sidebar_data").innerHTML = `Ticket ID: ${getCurrentTicketId()}`
+          document.getElementById("current-ticket").innerHTML = `Ticket ID: ${getCurrentTicketId()}`
         })
     } else {
       // Ticket sidebar app has be deactivated.
@@ -73,7 +72,7 @@ top_bar.on("app.registered", async () => {
         activeTicketSidebarClientInstance = top_bar.instance(instanceGuid)
         getDisplayedTicketInfo().then((result) => {
           setCurrentTicketInfo(result)
-          document.getElementById("sidebar_data").innerHTML = `Ticket ID: ${getCurrentTicketId()}`
+          document.getElementById("current-ticket").innerHTML = `Ticket ID: ${getCurrentTicketId()}`
         })
       }
     })
@@ -92,7 +91,7 @@ top_bar.on("app.registered", async () => {
       getDisplayedTicketInfo().then((result) => {
         setCurrentTicketInfo(result)
         setFormData()
-        document.getElementById("sidebar_data").innerHTML = `Ticket ID: ${getCurrentTicketId()}`
+        document.getElementById("current-ticket").innerHTML = `Ticket ID: ${getCurrentTicketId()}`
         top_bar.invoke('show')
       })
     }
@@ -100,14 +99,18 @@ top_bar.on("app.registered", async () => {
 
 
   top_bar.on('pane.activated', () => {
-    console.log("pane.activated")
+    console.log("debug - pane.activated")
     getDisplayedTicketInfo()
-    setFormData()
+      .then((result) => {
+        setCurrentTicketInfo(result)
+        setFormData()
+        document.getElementById("current-ticket").innerHTML = `Ticket ID: ${getCurrentTicketId()}`
+      })
   })
 
 
   top_bar.on('pane.deactivated', () => {
-    console.log("pane.deactivated")
+    console.log("debug - pane.deactivated")
     // 
   })
 
@@ -132,6 +135,10 @@ function createTicketSidebarEventHandlers(instanceGuid, location) {
   })
 }
 
+
+// ================================================================================================
+// Data getting and setting
+// ================================================================================================
 
 function getDisplayedTicketInfo() {  
   return activeTicketSidebarClientInstance
@@ -175,7 +182,6 @@ function setCurrentTicketInfo(ticketInfo) {
     ticket_info["rating_user_id"] = null
     ticket_info["additional_info"] = null
     ticket_info["updated_by_user_id"] = null
-    activeTicketSidebarClientInstance = null
   } else {  
     ticket_info["ticket.id"] = ticketInfo["ticket.id"]
     ticket_info["area"] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.area}`]
@@ -185,14 +191,14 @@ function setCurrentTicketInfo(ticketInfo) {
     ticket_info["additional_info"] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.additional_info}`]
     ticket_info["updated_by_user_id"] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.updated_by_user_id}`]
 
-    console.log('setCurrentTicketInfo:', ticket_info)
-    // TODO: Get 'Set By' user name
-    // TODO: Get 'updated by' user name
+    console.log('debug - setCurrentTicketInfo:', ticket_info)
   }
 }
 
 
 function setFormData() {
+
+  console.log("debug - setFormData:", ticket_info)
 
   if (ticket_info["feature"] != null)
     $(`#id-${ticket_info["feature"]}`).prop('checked', true) 
@@ -204,8 +210,16 @@ function setFormData() {
   else
     $('input[name=complexity-rating]').prop('checked', false)
 
-  if (ticket_info["rating_user_id"] != null)
-    $('#complexity-user-label').text(ticket_info["rating_user_id"])
+  if (ticket_info["rating_user_id"] != null) {
+    top_bar.request(`/api/v2/users/${ticket_info["rating_user_id"]}`)
+      .then((result) => {
+        $('#complexity-user-label').text(result.user.name)
+      })
+      .catch((error) => {
+        console.error("debug - dsapp error", error)
+        $('#complexity-user-label').text(`Error: ${error.responseJSON.description}`)
+      })
+  }
   else
     $('#complexity-user-label').text('')
 
@@ -213,15 +227,6 @@ function setFormData() {
     $('#additional-info').val(ticket_info["additional_info"])
   else
     $('#additional-info').val('')
-
-  // Will show 'value' attribute of checked radio button.
-  // let y = $("input[name=feature-area]:checked").val())
-  // $(`#id-${y}`).prop('checked', true)
-
-  // Radio button
-  //  $("input[name=feature-area]").val(ticket_info["area"])
-  //!$("input[name='feature-area']:checked").val())
-
 }
 
 
@@ -241,7 +246,8 @@ function getAppTicketFieldIds() {
   })
 }
 
-
+// ================================================================================================
+// HTML form actions
 // ================================================================================================
 
 function clearButtonClicked() {
@@ -253,26 +259,29 @@ function clearButtonClicked() {
   ticket_info["updated_by_user_id"] = null
 
   // Reset HTML values
-  $('#additional-info').val('')
-  $('#complexity-user-label').text('')
   $('input[name=feature-area]').prop('checked', false)
-  $("input[name=complexity-rating]").prop('checked',false)
+  $('#additional-info').val('')
+  $('input[name=complexity-rating]').prop('checked',false)
+  $('#complexity-user-label').text('')
+}
+
+
+function setComplexityRaterToCurrentUser() {
+  ticket_info["rating_user_id"] = currentUserInfo.id
+  $('#complexity-user-label').text(currentUserInfo.name)
 }
 
 
 function applyButtonClicked() {  
-  // console.log("XXX:", $('#additional-info').val() ? $('#additional-info').val() : null)
-  // TODO -- get user IDs for complexity rating and who's doing updating.
-
   // Get values from HTML
   ticket_info["area"] = developerSupportArea
   ticket_info["feature"] = $('input:radio[name=feature-area]:checked').val() ? $('input:radio[name=feature-area]:checked').val() : null
   ticket_info["complexity_rating"] = $("input[name=complexity-rating]:checked").val() ? $("input[name=complexity-rating]:checked").val() : null
-  ticket_info["rating_user_id"] = ticket_info["complexity_rating"] == null ? null : 123456
+  ticket_info["rating_user_id"] = ticket_info["complexity_rating"] == null ? null : ticket_info["rating_user_id"]
   ticket_info["additional_info"] = $('#additional-info').val() ? $('#additional-info').val() : null
-  ticket_info["updated_by_user_id"] = 222222
+  ticket_info["updated_by_user_id"] = currentUserInfo.id
 
-  console.log('ticket_info:', ticket_info)
+  console.log('debug - ticket_info:', ticket_info)
 
   activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.area}`, ticket_info["area"])
   activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.feature}`, ticket_info["feature"])
@@ -282,22 +291,9 @@ function applyButtonClicked() {
   activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.updated_by_user_id}`, ticket_info["updated_by_user_id"])
 
   top_bar.invoke('popover', 'hide')
-  // ticket_info["area"] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.area}`]
-  // ticket_info["feature"] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.feature}`]
-  // ticket_info["complexity_rating"] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.complexity_rating}`]
-  // ticket_info["rating_user_id"] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.rating_user_id}`]
-  // ticket_info["additional_info"] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.additional_info}`]
-  // ticket_info["updated_by_user_id"] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.updated_by_user_id}`]
 }
 
 
 function discardButtonClicked() {
-
-  // Just don't save what the form values are set to.
-  // Reset form values to original
-  // TODO: top_bar activate should re-read ticket info and populate form.
-
-
   top_bar.invoke('popover', 'hide')
-
 }

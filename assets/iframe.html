@@ -29,14 +29,14 @@
                 <div class="col-md-4">
                     <label class="c-txt__label u-font-family-system u-fs-lg u-pt-xs">Developer Platform</label>
                 </div>
-                <div class="col-md-4 u-pt-sm" id="resetBtn">
+                <div class="col-md-4 u-pt-sm">
+                    <label id=current-ticket></label>
+                </div>
+                <div class="col-md-4 u-pt-sm" id="clear-button-div">
                     <a href="#" id="clear-button">Clear</a>
                 </div>
-                <div class="col-md-4 u-pt-sm">
-                    <label id=sidebar_data></label>
-                </div>
             </div>
-            <p>Writing code against the Zendesk Developer Platform. Select most significant area.</p>
+            <p>Dev Ticket: Requester writing code against Zendesk Developer Platform. Select most significant platform area.</p>
             <hr class="custom-line">
         </div>
         </div>
@@ -308,20 +308,19 @@
       })
 
       $('#apply-button').click((e) => {
-          e.preventDefault()
-          console.log('ok clicked')
-          applyButtonClicked()
+        e.preventDefault()
+        console.log('ok clicked')
+        applyButtonClicked()
       })
 
       $('#discard-button').click((e) => {
-          e.preventDefault()
-          console.log('discard-button clicked')
-          discardButtonClicked()
+        e.preventDefault()
+        console.log('discard-button clicked')
+        discardButtonClicked()
       })
 
-      $('main-form').submit((e) => {
-        e.preventDefault()
-        console.log("form submit")
+      $('input[name=complexity-rating]').click(() => {
+        setComplexityRaterToCurrentUser()
       })
     })
     </script>

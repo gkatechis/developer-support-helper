@@ -12,8 +12,8 @@
       "top_bar": {
         "url": "assets/iframe.html",
         "size": {
-          "width": "800px",
-          "height": "690px"
+          "width": "840px",
+          "height": "720px"
         }
       },
       "ticket_sidebar": {
