@@ -23,7 +23,7 @@
 
 <body>
 
-    <form enctype="multipart/form-data" id="main-form">
+    <form>
         <div class="container-fluid">
             <div class="row justify-content-between">
                 <div class="col-md-4">
@@ -79,7 +79,7 @@
                     </div>
                 </div>
                 <!--Mobile SDK tools-->
-                <div class="col-md-4 ">
+                <div class="col-md-4">
                     <legend class="c-txt__label u-mt-xs">Mobile SDKs</legend>
                     <div class="u-mb-xxs">
                         <div>
@@ -110,7 +110,7 @@
                     </div>
                 </div>
                 <!--Other tools-->
-                <div class="col-md-4 ">
+                <div class="col-md-4">
                     <legend class="c-txt__label u-mt-xs ">Other</legend>
                     <div class="u-mb-xxs">
                         <div>
@@ -155,7 +155,7 @@
         <div class="container-fluid">
             <div class="row u-pb-xs">
                 <!--ZAF tools-->
-                <div class="col-md-4 ">
+                <div class="col-md-4">
                     <legend class="c-txt__label u-mt-xs">Apps Framework development</legend>
                     <div class="u-mb-xxs">
                         <div>
@@ -204,7 +204,7 @@
                     </div>
                 </div>
                 <!--Widget tools-->
-                <div class="col-md-4 ">
+                <div class="col-md-4">
                     <legend class="c-txt__label u-mt-xs">Widget</legend>
                     <div class="u-mb-xxs">
                         <div>
@@ -229,7 +229,7 @@
                     <div class="c-txt">
                         <label class="c-txt__label" for="additional-info">Additional info</label>
                         <input class="c-txt__input" id="additional-info" type="text" name="additional-info"
-                            placeholder="Add any additional comments here">
+                            placeholder="Add any additional comments here" autocomplete="off">
                     </div>
                 </div>
             </div>
@@ -303,19 +303,16 @@
 
     $(document).ready(() => {
       $('#clear-button').click((e) => {
-        console.log('clear clicked')
         clearButtonClicked()
       })
 
       $('#apply-button').click((e) => {
         e.preventDefault()
-        console.log('ok clicked')
         applyButtonClicked()
       })
 
       $('#discard-button').click((e) => {
         e.preventDefault()
-        console.log('discard-button clicked')
         discardButtonClicked()
       })
 
