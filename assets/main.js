@@ -244,8 +244,9 @@ function getAppTicketFieldIds() {
   return top_bar.request('/api/v2/ticket_fields').then((data) => {
     let custom_fields = data.ticket_fields.filter((field) => /dsapp_/.test(field.title))
     let appFieldIDs = {}
+    let grabFirstXCharacters = 6    // "dsapp_"
     custom_fields.forEach((field) => {
-      appFieldIDs[field.title.substr(6)] = field.id
+      appFieldIDs[field.title.substr(grabFirstXCharacters)] = field.id
     })
     return appFieldIDs
   })
