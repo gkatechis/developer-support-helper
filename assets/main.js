@@ -14,7 +14,7 @@
 // App initialization and setup
 // ================================================================================================
 
-var top_bar = ZAFClient.init();
+const top_bar = ZAFClient.init();
 
 // Current agent name and ID.
 let currentUserInfo
