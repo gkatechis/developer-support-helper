@@ -274,11 +274,11 @@ function setComplexityRaterToCurrentUser() {
 }
 
 
-function applyButtonClicked() {
+function saveButtonClicked() {
   if (isEmpty($('input:radio[name=feature-area]:checked').val())
       && (!isEmpty($('input[name=complexity-rating]:checked').val()) || !isEmpty($('#additional-info').val()))
      ) {
-    top_bar.invoke('notify', 'Please select a platform tool before saving.', 'error')
+    top_bar.invoke('notify', 'Please select a platform area before saving.', 'error')
     return
   }
 
@@ -292,18 +292,52 @@ function applyButtonClicked() {
 
   console.log('debug - ticket_info:', ticket_info)
 
-  activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.area}`, ticket_info['area'])
-  activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.feature}`, ticket_info['feature'])
-  activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.complexity_rating}`, ticket_info['complexity_rating'])
-  activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.rating_user_id}`, ticket_info['rating_user_id'])
-  activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.additional_info}`, ticket_info['additional_info'])
-  activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.updated_by_user_id}`, ticket_info['updated_by_user_id'])
+  // client.set('<field ID>') updates the custom ticket field, HOWEVER, if the field is not on 
+  // the agent's currently displayed ticket form when the Submit button is clicked, the value
+  // is not saved to the ticket. This despite that the ticket's "changed" UI indicator is set, 
+  // switching to a ticket form with those fields shows the values, and that the 'set' call successfully executes.
+  // So, imho, while this may be working "as designed", it is not "as expected" (which is to save on Submit0.
+  // See https://zendesk.slack.com/archives/C13G0G6NT/p1584981694152700
+  // activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.area}`, ticket_info['area'])
+  // activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.feature}`, ticket_info['feature'])
+  // activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.complexity_rating}`, ticket_info['complexity_rating'])
+  // activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.rating_user_id}`, ticket_info['rating_user_id'])
+  // activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.additional_info}`, ticket_info['additional_info'])
+  // activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.updated_by_user_id}`, ticket_info['updated_by_user_id'])
+  const newTicketFieldValues = {
+    ticket: {
+       custom_fields: [
+         {id: appFieldIDs.area, value: ticket_info['area']},
+         {id: appFieldIDs.feature, value: ticket_info['feature']},
+         {id: appFieldIDs.complexity_rating, value: ticket_info['complexity_rating']},
+         {id: appFieldIDs.rating_user_id, value: ticket_info['rating_user_id']},
+         {id: appFieldIDs.additional_info, value: ticket_info['additional_info']},
+         {id: appFieldIDs.updated_by_user_id, value: ticket_info['updated_by_user_id']}
+       ]
+    }
+  }
+
+  const settings = {
+    url: `/api/v2/tickets/${getCurrentTicketId()}`,
+    type:'PUT',
+    contentType: 'application/json',
+    data: JSON.stringify(newTicketFieldValues),
+    dataType: 'json'
+  }
+  
+  top_bar.request(settings)
+    .then((result) => {
+      console.log('debug - saveButtonClicked/ticket update successful:', result)
+    })
+    .catch((error) => {
+      console.error('debug - saveButtonClicked error saving ticket update', error)
+    })
 
   top_bar.invoke('popover', 'hide')
 }
 
 
-function discardButtonClicked() {
+function cancelButtonClicked() {
   top_bar.invoke('popover', 'hide')
 }
 

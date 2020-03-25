@@ -292,8 +292,8 @@
         <div class="row">
             <div class="col-xl">
                 <div class="l-btn-group float-right u-pr-sm u-pb-sm u-pt-sm">
-                    <button id="apply-button" class="c-btn c-btn--sm c-btn--pill c-btn--primary">Apply</button>
-                    <button id="discard-button" class="c-btn c-btn--sm c-btn--pill c-btn--muted">Discard</button>
+                    <button id="save-button" class="c-btn c-btn--sm c-btn--pill c-btn--primary">Save</button>
+                    <button id="cancel-button" class="c-btn c-btn--sm c-btn--pill c-btn--muted">Cancel</button>
                 </div>
             </div>
         </div>
@@ -306,14 +306,14 @@
         clearButtonClicked()
       })
 
-      $('#apply-button').click((e) => {
+      $('#save-button').click((e) => {
         e.preventDefault()
-        applyButtonClicked()
+        saveButtonClicked()
       })
 
-      $('#discard-button').click((e) => {
+      $('#cancel-button').click((e) => {
         e.preventDefault()
-        discardButtonClicked()
+        cancelButtonClicked()
       })
 
       $('input[name=complexity-rating]').click(() => {
