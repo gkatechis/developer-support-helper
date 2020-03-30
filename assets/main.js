@@ -242,7 +242,7 @@ function getCurrentTicketId() {
 function getAppTicketFieldIds() {
   // Returns a JavaScript object that contains the app's custom ticket field IDs.
   return top_bar.request('/api/v2/ticket_fields').then((data) => {
-    let custom_fields = data.ticket_fields.filter((field) => /dsapp_/.test(field.title))
+    let custom_fields = data.ticket_fields.filter((field) => /dsapp_/.test(field.title) && field.active)
     let appFieldIDs = {}
     let grabFirstXCharacters = 6    // "dsapp_"
     custom_fields.forEach((field) => {
