@@ -4,21 +4,18 @@
 		"name": "Dev Support Helper App Ticket Fields",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
-	"item": [
-		{
+	"item": [{
 			"name": "Create Custom Ticket Field - Area",
 			"request": {
 				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
+				"header": [{
+					"key": "Content-Type",
+					"type": "text",
+					"value": "application/json"
+				}],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"ticket_field\": {\n      \"type\": \"integer\",\n      \"title\": \"dsapp_area\",\n      \"description\": \"Needed field for dsapp app. Will hold special value indicating 'Dev Support' area.\"\n  }\n}"
+					"raw": "{\n  \"ticket_field\": {\n      \"type\": \"text\",\n      \"title\": \"DS App - Area\",\n      \"description\": \"Needed field for dsapp app. Will hold special value indicating 'Dev Support' area.\"\n  }\n}"
 				},
 				"url": {
 					"raw": "https://{{subdomain}}.zendesk.com/api/v2/ticket_fields",
@@ -41,16 +38,14 @@
 			"name": "Create Custom Ticket Field - Feature",
 			"request": {
 				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
+				"header": [{
+					"key": "Content-Type",
+					"type": "text",
+					"value": "application/json"
+				}],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"ticket_field\": {\n      \"type\": \"integer\",\n      \"title\": \"dsapp_feature\",\n      \"description\": \"Needed field for Developer Support Helper app. Holds specific product area feature.\"\n  }\n}"
+					"raw": "{\n  \"ticket_field\": {\n      \"type\": \"text\",\n      \"title\": \"DS App - Feature\",\n      \"description\": \"Needed field for Developer Support Helper app. Holds specific product area feature.\"\n  }\n}"
 				},
 				"url": {
 					"raw": "https://{{subdomain}}.zendesk.com/api/v2/ticket_fields",
@@ -73,16 +68,14 @@
 			"name": "Create Custom Ticket Field - Complexity Rating",
 			"request": {
 				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
+				"header": [{
+					"key": "Content-Type",
+					"type": "text",
+					"value": "application/json"
+				}],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"ticket_field\": {\n      \"type\": \"integer\",\n      \"title\": \"dsapp_complexity_rating\",\n      \"description\": \"Needed field for dsapp app. Allows the agent to rate the level of difficulty of the ticket from 1 (low) to 5 (high).\"\n  }\n}"
+					"raw": "{\n  \"ticket_field\": {\n      \"type\": \"text\",\n      \"title\": \"DS App - Complexity Rating\",\n      \"description\": \"Needed field for dsapp app. Allows the agent to rate the level of difficulty of the ticket from 1 (low) to 5 (high).\"\n  }\n}"
 				},
 				"url": {
 					"raw": "https://{{subdomain}}.zendesk.com/api/v2/ticket_fields",
@@ -105,16 +98,14 @@
 			"name": "Create Custom Ticket Field - Complexity Rating User ID",
 			"request": {
 				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
+				"header": [{
+					"key": "Content-Type",
+					"type": "text",
+					"value": "application/json"
+				}],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"ticket_field\": {\n      \"type\": \"integer\",\n      \"title\": \"dsapp_rating_user_id\",\n      \"description\": \"Needed field for dsapp app. Captures the current user's ID when they select a complexity rating.\"\n  }\n}"
+					"raw": "{\n  \"ticket_field\": {\n      \"type\": \"text\",\n      \"title\": \"DS App - Rating by User ID\",\n      \"description\": \"Needed field for dsapp app. Captures the current user's ID when they select a complexity rating.\"\n  }\n}"
 				},
 				"url": {
 					"raw": "https://{{subdomain}}.zendesk.com/api/v2/ticket_fields",
@@ -137,16 +128,14 @@
 			"name": "Create Custom Ticket Field - Additional Info",
 			"request": {
 				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
+				"header": [{
+					"key": "Content-Type",
+					"type": "text",
+					"value": "application/json"
+				}],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"ticket_field\": {\n      \"type\": \"text\",\n      \"title\": \"dsapp_additional_info\",\n      \"description\": \"Needed field for dsapp app. Open text field to add additional comments. Also allows the current user to add info if they selected 'Other'.\"\n  }\n}"
+					"raw": "{\n  \"ticket_field\": {\n      \"type\": \"text\",\n      \"title\": \"DS App - Additional Info\",\n      \"description\": \"Needed field for dsapp app. Open text field to add additional comments. Also allows the current user to add info if they selected 'Other'.\"\n  }\n}"
 				},
 				"url": {
 					"raw": "https://{{subdomain}}.zendesk.com/api/v2/ticket_fields",
@@ -169,16 +158,14 @@
 			"name": "Create Custom Ticket Field - Updated by User ID",
 			"request": {
 				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
+				"header": [{
+					"key": "Content-Type",
+					"type": "text",
+					"value": "application/json"
+				}],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"ticket_field\": {\n      \"type\": \"integer\",\n      \"title\": \"dsapp_updated_by_user_id\",\n      \"description\": \"Needed field for dsapp app. Captures the user ID that added or last edited record.\"\n  }\n}"
+					"raw": "{\n  \"ticket_field\": {\n      \"type\": \"text\",\n      \"title\": \"DS App - Updated by User ID\",\n      \"description\": \"Needed field for dsapp app. Captures the user ID that added or last edited record.\"\n  }\n}"
 				},
 				"url": {
 					"raw": "https://{{subdomain}}.zendesk.com/api/v2/ticket_fields",
@@ -200,8 +187,7 @@
 	],
 	"auth": {
 		"type": "basic",
-		"basic": [
-			{
+		"basic": [{
 				"key": "password",
 				"value": "",
 				"type": "string"
@@ -213,8 +199,7 @@
 			}
 		]
 	},
-	"event": [
-		{
+	"event": [{
 			"listen": "prerequest",
 			"script": {
 				"id": "b123424b-685a-425a-ac37-7d2592145400",
@@ -235,13 +220,11 @@
 			}
 		}
 	],
-	"variable": [
-		{
-			"id": "661d49d8-3ba5-4a09-b359-3c88b714bae1",
-			"key": "subdomain",
-			"value": "z3n3395",
-			"type": "string"
-		}
-	],
+	"variable": [{
+		"id": "661d49d8-3ba5-4a09-b359-3c88b714bae1",
+		"key": "subdomain",
+		"value": "z3n3395",
+		"type": "string"
+	}],
 	"protocolProfileBehavior": {}
 }
