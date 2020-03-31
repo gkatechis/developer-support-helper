@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "93c2756e-fa76-4767-ae4c-9cf4b2ef9a3b",
+		"_postman_id": "accc1732-e3ea-42f4-9ed0-f1f79118bd6d",
 		"name": "Dev Support Helper App Ticket Fields",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -82,7 +82,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"ticket_field\": {\n      \"type\": \"text\",\n      \"title\": \"dsapp_complexity_rating\",\n      \"description\": \"Needed field for dsapp app. Allows the agent to rate the level of difficulty of the ticket from 1 (low) to 5 (high).\"\n  }\n}"
+					"raw": "{\n  \"ticket_field\": {\n      \"type\": \"integer\",\n      \"title\": \"dsapp_complexity_rating\",\n      \"description\": \"Needed field for dsapp app. Allows the agent to rate the level of difficulty of the ticket from 1 (low) to 5 (high).\"\n  }\n}"
 				},
 				"url": {
 					"raw": "https://{{subdomain}}.zendesk.com/api/v2/ticket_fields",
@@ -115,6 +115,38 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{\n  \"ticket_field\": {\n      \"type\": \"text\",\n      \"title\": \"dsapp_rating_user_id\",\n      \"description\": \"Needed field for dsapp app. Captures the current user's ID when they select a complexity rating.\"\n  }\n}"
+				},
+				"url": {
+					"raw": "https://{{subdomain}}.zendesk.com/api/v2/ticket_fields",
+					"protocol": "https",
+					"host": [
+						"{{subdomain}}",
+						"zendesk",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2",
+						"ticket_fields"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Custom Ticket Field - Complexity Rating User Name",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"ticket_field\": {\n      \"type\": \"text\",\n      \"title\": \"dsapp_rating_user_name\",\n      \"description\": \"Needed field for dsapp app. Captures the current user's name when they select a complexity rating.\"\n  }\n}"
 				},
 				"url": {
 					"raw": "https://{{subdomain}}.zendesk.com/api/v2/ticket_fields",
@@ -196,6 +228,38 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Create Custom Ticket Field - Updated by User Name",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"ticket_field\": {\n      \"type\": \"text\",\n      \"title\": \"dsapp_updated_by_user_name\",\n      \"description\": \"Needed field for dsapp app. Captures the user name that added or last edited record.\"\n  }\n}"
+				},
+				"url": {
+					"raw": "https://{{subdomain}}.zendesk.com/api/v2/ticket_fields",
+					"protocol": "https",
+					"host": [
+						"{{subdomain}}",
+						"zendesk",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2",
+						"ticket_fields"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"auth": {
@@ -203,12 +267,12 @@
 		"basic": [
 			{
 				"key": "password",
-				"value": "",
+				"value": "password",
 				"type": "string"
 			},
 			{
 				"key": "username",
-				"value": "",
+				"value": "john@example.com",
 				"type": "string"
 			}
 		]
@@ -237,7 +301,7 @@
 	],
 	"variable": [
 		{
-			"id": "661d49d8-3ba5-4a09-b359-3c88b714bae1",
+			"id": "c52e2ba1-b51c-4ef8-85a7-d2b281285d33",
 			"key": "subdomain",
 			"value": "z3n3395",
 			"type": "string"

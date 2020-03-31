@@ -150,8 +150,10 @@ function getDisplayedTicketInfo() {
       `ticket.customField:custom_field_${appFieldIDs.feature}`,
       `ticket.customField:custom_field_${appFieldIDs.complexity_rating}`,
       `ticket.customField:custom_field_${appFieldIDs.rating_user_id}`,
+      `ticket.customField:custom_field_${appFieldIDs.rating_user_name}`,
       `ticket.customField:custom_field_${appFieldIDs.additional_info}`,
       `ticket.customField:custom_field_${appFieldIDs.updated_by_user_id}`,
+      `ticket.customField:custom_field_${appFieldIDs.updated_by_user_name}`,
       'ticket.id'
     ])
     .then((result) => {
@@ -184,16 +186,20 @@ function setCurrentTicketInfo(ticketInfo) {
     ticket_info['feature'] = ''
     ticket_info['complexity_rating'] = ''
     ticket_info['rating_user_id'] = ''
+    ticket_info['rating_user_name'] = ''
     ticket_info['additional_info'] = ''
     ticket_info['updated_by_user_id'] = ''
+    ticket_info['updated_by_user_name'] = ''
   } else {  
     ticket_info['ticket.id'] = ticketInfo['ticket.id']
     ticket_info['area'] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.area}`]
     ticket_info['feature'] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.feature}`]
     ticket_info['complexity_rating'] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.complexity_rating}`]
     ticket_info['rating_user_id'] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.rating_user_id}`]
+    ticket_info['rating_user_name'] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.rating_user_name}`]
     ticket_info['additional_info'] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.additional_info}`]
     ticket_info['updated_by_user_id'] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.updated_by_user_id}`]
+    ticket_info['updated_by_user_name'] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.updated_by_user_name}`]
 
     console.log('debug - setCurrentTicketInfo:', ticket_info)
   }
@@ -261,8 +267,10 @@ function clearButtonClicked() {
   ticket_info['feature'] = ''
   ticket_info['complexity_rating'] = ''
   ticket_info['rating_user_id'] = ''
+  ticket_info['rating_user_name'] = ''
   ticket_info['additional_info'] = ''
   ticket_info['updated_by_user_id'] = ''
+  ticket_info['updated_by_user_name'] = ''
 
   setFormData()
 }
@@ -270,6 +278,7 @@ function clearButtonClicked() {
 
 function setComplexityRaterToCurrentUser() {
   ticket_info['rating_user_id'] = currentUserInfo.id
+  ticket_info['rating_user_name'] = currentUserInfo.name
   $('#complexity-user-label').text(currentUserInfo.name)
 }
 
@@ -287,8 +296,10 @@ function saveButtonClicked() {
   ticket_info['feature'] = isEmpty($('input:radio[name=feature-area]:checked').val()) ? '' : $('input:radio[name=feature-area]:checked').val()
   ticket_info['complexity_rating'] = isEmpty($('input[name=complexity-rating]:checked').val()) ? '' : $('input[name=complexity-rating]:checked').val()
   ticket_info['rating_user_id'] = isEmpty(ticket_info['complexity_rating']) ? '' : ticket_info['rating_user_id']
+  ticket_info['rating_user_name'] = isEmpty(ticket_info['complexity_rating']) ? '' : ticket_info['rating_user_name']
   ticket_info['additional_info'] = isEmpty($('#additional-info').val()) ? '' : $('#additional-info').val()
   ticket_info['updated_by_user_id'] = currentUserInfo.id
+  ticket_info['updated_by_user_name'] = currentUserInfo.name
 
   console.log('debug - ticket_info:', ticket_info)
 
@@ -311,8 +322,10 @@ function saveButtonClicked() {
          {id: appFieldIDs.feature, value: ticket_info['feature']},
          {id: appFieldIDs.complexity_rating, value: ticket_info['complexity_rating']},
          {id: appFieldIDs.rating_user_id, value: ticket_info['rating_user_id']},
+         {id: appFieldIDs.rating_user_name, value: ticket_info['rating_user_name']},
          {id: appFieldIDs.additional_info, value: ticket_info['additional_info']},
-         {id: appFieldIDs.updated_by_user_id, value: ticket_info['updated_by_user_id']}
+         {id: appFieldIDs.updated_by_user_id, value: ticket_info['updated_by_user_id']},
+         {id: appFieldIDs.updated_by_user_name, value: ticket_info['updated_by_user_name']}
        ]
     }
   }
