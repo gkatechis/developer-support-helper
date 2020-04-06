@@ -5,3 +5,7 @@
     border-top-style: solid;
     border-top-color: rgba(0, 0, 0, 0.1);
 }
+
+#clear-button {
+  padding-right: 30px;
+}

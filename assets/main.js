@@ -309,42 +309,46 @@ function saveButtonClicked() {
   // switching to a ticket form with those fields shows the values, and that the 'set' call successfully executes.
   // So, imho, while this may be working "as designed", it is not "as expected" (which is to save on Submit0.
   // See https://zendesk.slack.com/archives/C13G0G6NT/p1584981694152700
-  // activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.area}`, ticket_info['area'])
-  // activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.feature}`, ticket_info['feature'])
-  // activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.complexity_rating}`, ticket_info['complexity_rating'])
-  // activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.rating_user_id}`, ticket_info['rating_user_id'])
-  // activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.additional_info}`, ticket_info['additional_info'])
-  // activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.updated_by_user_id}`, ticket_info['updated_by_user_id'])
-  const newTicketFieldValues = {
-    ticket: {
-       custom_fields: [
-         {id: appFieldIDs.area, value: ticket_info['area']},
-         {id: appFieldIDs.feature, value: ticket_info['feature']},
-         {id: appFieldIDs.complexity_rating, value: ticket_info['complexity_rating']},
-         {id: appFieldIDs.rating_user_id, value: ticket_info['rating_user_id']},
-         {id: appFieldIDs.rating_user_name, value: ticket_info['rating_user_name']},
-         {id: appFieldIDs.additional_info, value: ticket_info['additional_info']},
-         {id: appFieldIDs.updated_by_user_id, value: ticket_info['updated_by_user_id']},
-         {id: appFieldIDs.updated_by_user_name, value: ticket_info['updated_by_user_name']}
-       ]
-    }
-  }
+  activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.area}`, ticket_info['area'])
+  activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.feature}`, ticket_info['feature'])
+  activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.complexity_rating}`, ticket_info['complexity_rating'])
+  activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.rating_user_id}`, ticket_info['rating_user_id'])
+  activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.rating_user_name}`, ticket_info['rating_user_name'])
+  activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.additional_info}`, ticket_info['additional_info'])
+  activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.updated_by_user_id}`, ticket_info['updated_by_user_id'])
+  activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.updated_by_user_name}`, ticket_info['updated_by_user_name'])
 
-  const settings = {
-    url: `/api/v2/tickets/${getCurrentTicketId()}`,
-    type:'PUT',
-    contentType: 'application/json',
-    data: JSON.stringify(newTicketFieldValues),
-    dataType: 'json'
-  }
-  
-  top_bar.request(settings)
-    .then((result) => {
-      console.log('debug - saveButtonClicked/ticket update successful:', result)
-    })
-    .catch((error) => {
-      console.error('debug - saveButtonClicked error saving ticket update', error)
-    })
+  // UPDATE FIELDS VIA DIRECT API CALL
+  // const newTicketFieldValues = {
+  //   ticket: {
+  //      custom_fields: [
+  //        {id: appFieldIDs.area, value: ticket_info['area']},
+  //        {id: appFieldIDs.feature, value: ticket_info['feature']},
+  //        {id: appFieldIDs.complexity_rating, value: ticket_info['complexity_rating']},
+  //        {id: appFieldIDs.rating_user_id, value: ticket_info['rating_user_id']},
+  //        {id: appFieldIDs.rating_user_name, value: ticket_info['rating_user_name']},
+  //        {id: appFieldIDs.additional_info, value: ticket_info['additional_info']},
+  //        {id: appFieldIDs.updated_by_user_id, value: ticket_info['updated_by_user_id']},
+  //        {id: appFieldIDs.updated_by_user_name, value: ticket_info['updated_by_user_name']}
+  //      ]
+  //   }
+  // }
+  //
+  // const settings = {
+  //   url: `/api/v2/tickets/${getCurrentTicketId()}`,
+  //   type:'PUT',
+  //   contentType: 'application/json',
+  //   data: JSON.stringify(newTicketFieldValues),
+  //   dataType: 'json'
+  // }
+  //
+  // top_bar.request(settings)
+  //   .then((result) => {
+  //     console.log('debug - saveButtonClicked/ticket update successful:', result)
+  //   })
+  //   .catch((error) => {
+  //     console.error('debug - saveButtonClicked error saving ticket update', error)
+  //   })
 
   top_bar.invoke('popover', 'hide')
 }
