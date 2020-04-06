@@ -262,6 +262,11 @@ function getAppTicketFieldIds() {
 // HTML form actions
 // ================================================================================================
 
+function setArea() {
+  ticket_info['area'] = developerSupportArea
+}
+
+
 function clearButtonClicked() {
   ticket_info['area'] = ''
   ticket_info['feature'] = ''
@@ -292,7 +297,7 @@ function saveButtonClicked() {
   }
 
   // Get values from HTML
-  ticket_info['area'] = developerSupportArea
+  ticket_info['area'] = isEmpty(ticket_info['area']) ? '' : ticket_info['area']
   ticket_info['feature'] = isEmpty($('input:radio[name=feature-area]:checked').val()) ? '' : $('input:radio[name=feature-area]:checked').val()
   ticket_info['complexity_rating'] = isEmpty($('input[name=complexity-rating]:checked').val()) ? '' : $('input[name=complexity-rating]:checked').val()
   ticket_info['rating_user_id'] = isEmpty(ticket_info['complexity_rating']) ? '' : ticket_info['rating_user_id']
