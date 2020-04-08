@@ -292,7 +292,7 @@ function saveButtonClicked() {
   if (isEmpty($('input:radio[name=feature-area]:checked').val())
       && (!isEmpty($('input[name=complexity-rating]:checked').val()) || !isEmpty($('#additional-info').val()))
      ) {
-    top_bar.invoke('notify', 'Please select a platform area before saving.', 'error')
+    top_bar.invoke('notify', 'Please select a platform area before saving.', 'alert')
     return
   }
 
