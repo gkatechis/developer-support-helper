@@ -13,14 +13,8 @@ const dev_platform_feature = {
     SELL: 122
   },
   MOBILE_SDK: {
-    CHAT: {
-      IOS: 140,
-      ANDROID: 141
-    },
-    SUPPORT: {
-      IOS: 142,
-      ANDROID: 143
-    }
+    CHAT: 140,
+    SUPPORT: 141
   },
   SUNSHINE: {
     CUSTOM_OBJECTS: 160,
@@ -33,11 +27,9 @@ const dev_platform_feature = {
     WEB_SDK: 181
   },
   OTHER: {
-    SPONSORED_DEV_ACCOUNT: 200,
-    GETTING_APP_PUBLISHED: 201,
-    GLOBAL_OAUTH_CLIENT: 202,
-    API_CLIENTS: 203,
-    GUIDE_GATHER_CUSTOMIZATION: 204,
-    OTHER: 205
+    OTHER: 200,
+    API_CLIENTS: 201,
+    APP_PUBLISHING: 202,
+    GUIDE_GATHER_CUSTOMIZATION: 203
   }
 }
