@@ -210,15 +210,21 @@ function setFormData() {
 
   console.log('debug - setFormData:', ticket_info)
 
-  if (!isEmpty(ticket_info['feature']))
-    $(`#id-${ticket_info['feature']}`).prop('checked', true) 
-  else 
-    $('input[name=feature-area]').prop('checked', false)
+  let isFormData = false
 
-  if (!isEmpty(ticket_info['complexity_rating']))
+  if (!isEmpty(ticket_info['feature'])) {
+    $(`${ticket_info['feature']}`).prop('checked', true)
+    isFormData = true
+  } else {
+    $('input[name=feature-area]').prop('checked', false)
+  }
+
+  if (!isEmpty(ticket_info['complexity_rating'])) {
     $(`#complexity${ticket_info['complexity_rating']}`).prop('checked', true)
-  else
+    isFormData = true
+  } else {
     $('input[name=complexity-rating]').prop('checked', false)
+  }
 
   if (!isEmpty(ticket_info['rating_user_id'])) {
     top_bar.request(`/api/v2/users/${ticket_info['rating_user_id']}`)
@@ -229,14 +235,22 @@ function setFormData() {
         console.error('debug - error getting rating_user', error)
         $('#complexity-user-label').text(`Error: ${error}`)
       })
+    isFormData = true
   }
   else
     $('#complexity-user-label').text('')
 
-  if (!isEmpty(ticket_info['additional_info']))
+  if (!isEmpty(ticket_info['additional_info'])) {
     $('#additional-info').val(ticket_info['additional_info'])
-  else
+    isFormData = true
+  } else {
     $('#additional-info').val('')
+  }
+
+  if (isFormData)
+    top_bar.set('iconSymbol', 'filledSymbol')
+  else
+    top_bar.set('iconSymbol', 'emptySymbol')
 }
 
 
