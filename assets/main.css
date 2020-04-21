@@ -1,9 +1,9 @@
 .custom-line {
-    margin-top: 0px;
-    margin-bottom: 5px;
-    border-top-width: 2px;
-    border-top-style: solid;
-    border-top-color: rgba(0, 0, 0, 0.1);
+  margin-top: 0px;
+  margin-bottom: 5px;
+  border-top-width: 2px;
+  border-top-style: solid;
+  border-top-color: rgba(0, 0, 0, 0.1);
 }
 
 #clear-button {
@@ -11,6 +11,10 @@
 }
 
 html, body {
-    max-width: 100%;
-    overflow-x: hidden;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.product-header {
+  text-decoration: underline;
 }
