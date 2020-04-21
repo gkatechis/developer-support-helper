@@ -8,6 +8,7 @@
 //   Add hot keys?
 //   Consider modification: Just capture category (i.e. API, Mobile SDK, ZAF, etc -- is nuance needed?)
 //   Create a better icon_top_bar.svg image
+//   Growler when Applied clicked: "Developer Support information applied to ticket."
 
 
 // ================================================================================================
@@ -148,7 +149,7 @@ function getDisplayedTicketInfo() {
     .get([
       `ticket.customField:custom_field_${appFieldIDs.area}`,
       `ticket.customField:custom_field_${appFieldIDs.feature}`,
-      `ticket.customField:custom_field_${appFieldIDs.complexity_rating}`,
+      `ticket.customField:custom_field_${appFieldIDs.effort_rating}`,
       `ticket.customField:custom_field_${appFieldIDs.rating_user_id}`,
       `ticket.customField:custom_field_${appFieldIDs.rating_user_name}`,
       `ticket.customField:custom_field_${appFieldIDs.additional_info}`,
@@ -184,7 +185,7 @@ function setCurrentTicketInfo(ticketInfo) {
     ticket_info['ticket.id'] = ''
     ticket_info['area'] = ''
     ticket_info['feature'] = ''
-    ticket_info['complexity_rating'] = ''
+    ticket_info['effort_rating'] = ''
     ticket_info['rating_user_id'] = ''
     ticket_info['rating_user_name'] = ''
     ticket_info['additional_info'] = ''
@@ -194,7 +195,7 @@ function setCurrentTicketInfo(ticketInfo) {
     ticket_info['ticket.id'] = ticketInfo['ticket.id']
     ticket_info['area'] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.area}`]
     ticket_info['feature'] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.feature}`]
-    ticket_info['complexity_rating'] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.complexity_rating}`]
+    ticket_info['effort_rating'] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.effort_rating}`]
     ticket_info['rating_user_id'] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.rating_user_id}`]
     ticket_info['rating_user_name'] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.rating_user_name}`]
     ticket_info['additional_info'] = ticketInfo[`ticket.customField:custom_field_${appFieldIDs.additional_info}`]
@@ -213,32 +214,32 @@ function setFormData() {
   let isFormData = false
 
   if (!isEmpty(ticket_info['feature'])) {
-    $(`${ticket_info['feature']}`).prop('checked', true)
+    $(`#${ticket_info['feature']}`).prop('checked', true)
     isFormData = true
   } else {
     $('input[name=feature-area]').prop('checked', false)
   }
 
-  if (!isEmpty(ticket_info['complexity_rating'])) {
-    $(`#complexity${ticket_info['complexity_rating']}`).prop('checked', true)
+  if (!isEmpty(ticket_info['effort_rating'])) {
+    $(`#effort${ticket_info['effort_rating']}`).prop('checked', true)
     isFormData = true
   } else {
-    $('input[name=complexity-rating]').prop('checked', false)
+    $('input[name=effort-rating]').prop('checked', false)
   }
 
   if (!isEmpty(ticket_info['rating_user_id'])) {
     top_bar.request(`/api/v2/users/${ticket_info['rating_user_id']}`)
       .then((result) => {
-        $('#complexity-user-label').text(result.user.name)
+        $('#effort-user-label').text(result.user.name)
       })
       .catch((error) => {
         console.error('debug - error getting rating_user', error)
-        $('#complexity-user-label').text(`Error: ${error}`)
+        $('#effort-user-label').text(`Error: ${error}`)
       })
     isFormData = true
   }
   else
-    $('#complexity-user-label').text('')
+    $('#effort-user-label').text('')
 
   if (!isEmpty(ticket_info['additional_info'])) {
     $('#additional-info').val(ticket_info['additional_info'])
@@ -264,9 +265,9 @@ function getAppTicketFieldIds() {
   return top_bar.request('/api/v2/ticket_fields').then((data) => {
     let custom_fields = data.ticket_fields.filter((field) => /dsapp_/.test(field.title) && field.active)
     let appFieldIDs = {}
-    let grabFirstXCharacters = 6    // "dsapp_"
+    let getUniqueFieldName = 6    // Jump past common prefix ("dsapp_") to get working name for field.
     custom_fields.forEach((field) => {
-      appFieldIDs[field.title.substr(grabFirstXCharacters)] = field.id
+      appFieldIDs[field.title.substr(getUniqueFieldName)] = field.id
     })
     return appFieldIDs
   })
@@ -284,7 +285,7 @@ function setArea() {
 function clearButtonClicked() {
   ticket_info['area'] = ''
   ticket_info['feature'] = ''
-  ticket_info['complexity_rating'] = ''
+  ticket_info['effort_rating'] = ''
   ticket_info['rating_user_id'] = ''
   ticket_info['rating_user_name'] = ''
   ticket_info['additional_info'] = ''
@@ -295,16 +296,16 @@ function clearButtonClicked() {
 }
 
 
-function setComplexityRaterToCurrentUser() {
+function setEffortRaterToCurrentUser() {
   ticket_info['rating_user_id'] = currentUserInfo.id
   ticket_info['rating_user_name'] = currentUserInfo.name
-  $('#complexity-user-label').text(currentUserInfo.name)
+  $('#effort-user-label').text(currentUserInfo.name)
 }
 
 
-function saveButtonClicked() {
+function applyButtonClicked() {
   if (isEmpty($('input:radio[name=feature-area]:checked').val())
-      && (!isEmpty($('input[name=complexity-rating]:checked').val()) || !isEmpty($('#additional-info').val()))
+      && (!isEmpty($('input[name=effort-rating]:checked').val()) || !isEmpty($('#additional-info').val()))
      ) {
     top_bar.invoke('notify', 'Please select a platform area before saving.', 'alert')
     return
@@ -313,9 +314,9 @@ function saveButtonClicked() {
   // Get values from HTML
   ticket_info['area'] = isEmpty(ticket_info['area']) ? '' : ticket_info['area']
   ticket_info['feature'] = isEmpty($('input:radio[name=feature-area]:checked').val()) ? '' : $('input:radio[name=feature-area]:checked').val()
-  ticket_info['complexity_rating'] = isEmpty($('input[name=complexity-rating]:checked').val()) ? '' : $('input[name=complexity-rating]:checked').val()
-  ticket_info['rating_user_id'] = isEmpty(ticket_info['complexity_rating']) ? '' : ticket_info['rating_user_id']
-  ticket_info['rating_user_name'] = isEmpty(ticket_info['complexity_rating']) ? '' : ticket_info['rating_user_name']
+  ticket_info['effort_rating'] = isEmpty($('input[name=effort-rating]:checked').val()) ? '' : $('input[name=effort-rating]:checked').val()
+  ticket_info['rating_user_id'] = isEmpty(ticket_info['effort_rating']) ? '' : ticket_info['rating_user_id']
+  ticket_info['rating_user_name'] = isEmpty(ticket_info['effort_rating']) ? '' : ticket_info['rating_user_name']
   ticket_info['additional_info'] = isEmpty($('#additional-info').val()) ? '' : $('#additional-info').val()
   ticket_info['updated_by_user_id'] = currentUserInfo.id
   ticket_info['updated_by_user_name'] = currentUserInfo.name
@@ -330,7 +331,7 @@ function saveButtonClicked() {
   // See https://zendesk.slack.com/archives/C13G0G6NT/p1584981694152700
   activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.area}`, ticket_info['area'])
   activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.feature}`, ticket_info['feature'])
-  activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.complexity_rating}`, ticket_info['complexity_rating'])
+  activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.effort_rating}`, ticket_info['effort_rating'])
   activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.rating_user_id}`, ticket_info['rating_user_id'])
   activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.rating_user_name}`, ticket_info['rating_user_name'])
   activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.additional_info}`, ticket_info['additional_info'])
@@ -363,11 +364,13 @@ function saveButtonClicked() {
   //
   // top_bar.request(settings)
   //   .then((result) => {
-  //     console.log('debug - saveButtonClicked/ticket update successful:', result)
+  //     console.log('debug - applyButtonClicked/ticket update successful:', result)
   //   })
   //   .catch((error) => {
-  //     console.error('debug - saveButtonClicked error saving ticket update', error)
+  //     console.error('debug - applyButtonClicked error saving ticket update', error)
   //   })
+
+  top_bar.invoke('notify', 'Developer Support information applied to ticket.')
 
   top_bar.invoke('popover', 'hide')
 }

@@ -50,7 +50,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"ticket_field\": {\n      \"type\": \"text\",\n      \"title\": \"dsapp_feature\",\n      \"description\": \"Needed field for Developer Support Helper app. Holds specific product area feature.\"\n  }\n}"
+					"raw": "{\n  \"ticket_field\": {\n    \"title\": \"dsapp_feature\",\n    \"description\": \"Needed field for Developer Support Helper app. Holds specific product area feature.\",\n    \"required\": false,\n    \"type\": \"tagger\",\n    \"custom_field_options\": [\n      {\n        \"name\": \"Support API\",\"value\": \"dsapp_api_support\"\n      },\n      {\n        \"name\": \"Chat API\",\n        \"value\": \"dsapp_api_chat\"\n      },\n      {\n        \"name\": \"Chat Conversation API\",\n        \"value\": \"dsapp_api_chat_convo\"\n      },\n      {\n        \"name\": \"Talk API\",\n        \"value\": \"dsapp_api_talk\"\n      },\n      {\n        \"name\": \"Guide API\",\n        \"value\": \"dsapp_api_guide\"\n      },\n      {\n        \"name\": \"Sell API\",\n        \"value\": \"dsapp_api_sell\"\n      },\n      {\n        \"name\": \"Support ZAF\",\n        \"value\": \"dsapp_zaf_support\"\n      },\n      {\n        \"name\": \"Chat ZAF\",\n        \"value\": \"dsapp_zaf_chat\"\n      },\n      {\n        \"name\": \"Sell ZAF\",\n        \"value\": \"dsapp_zaf_sell\"\n      },\n      {\n        \"name\": \"Chat Mobile SDK\",\n        \"value\": \"dsapp_sdk_chat\"\n      },\n      {\n        \"name\": \"Support Mobile SDK\",\n        \"value\": \"dsapp_sdk_support\"\n      },\n      {\n        \"name\": \"Sunshine CO\",\n        \"value\": \"dsapp_sunshine_co\"\n      },\n      {\n        \"name\": \"Sunshine Profiles and Events\",\n        \"value\": \"dsapp_sunshine_pande\"\n      },\n      {\n        \"name\": \"Sunshine Conversations\",\n        \"value\": \"dsapp_sunshine_convo\"\n      },\n      {\n        \"name\": \"Sunshine Events Bridge\",\n        \"value\": \"dsapp_sunshine_eventsbridge\"\n      },\n      {\n        \"name\": \"App marketplace publishing\",\n        \"value\": \"dsapp_app_marketplace\"\n      },\n      {\n        \"name\": \"API Clients\",\n        \"value\": \"dsapp_api_clients\"\n      },\n      {\n        \"name\": \"Guide Customization\",\n        \"value\": \"dsapp_guide_customization\"\n      },\n      {\n        \"name\": \"Other\",\n        \"value\": \"dsapp_other\"\n      },\n      {\n        \"name\": \"Widget\",\n        \"value\": \"dsapp_widget\"\n      }\n    ]\n  }\n}"
 				},
 				"url": {
 					"raw": "https://{{subdomain}}.zendesk.com/api/v2/ticket_fields",
@@ -70,7 +70,7 @@
 			"response": []
 		},
 		{
-			"name": "Create Custom Ticket Field - Complexity Rating",
+			"name": "Create Custom Ticket Field - Effort Rating",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -82,7 +82,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"ticket_field\": {\n      \"type\": \"integer\",\n      \"title\": \"dsapp_complexity_rating\",\n      \"description\": \"Needed field for dsapp app. Allows the agent to rate the level of difficulty of the ticket from 1 (low) to 5 (high).\"\n  }\n}"
+					"raw": "{\n  \"ticket_field\": {\n      \"type\": \"integer\",\n      \"title\": \"dsapp_effort_rating\",\n      \"description\": \"Needed field for dsapp app. Allows the agent to rate the level of effort of the ticket from 1 (low) to 3 (high).\"\n  }\n}"
 				},
 				"url": {
 					"raw": "https://{{subdomain}}.zendesk.com/api/v2/ticket_fields",
@@ -102,7 +102,7 @@
 			"response": []
 		},
 		{
-			"name": "Create Custom Ticket Field - Complexity Rating User ID",
+			"name": "Create Custom Ticket Field - Effort Rating User ID",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -114,7 +114,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"ticket_field\": {\n      \"type\": \"text\",\n      \"title\": \"dsapp_rating_user_id\",\n      \"description\": \"Needed field for dsapp app. Captures the current user's ID when they select a complexity rating.\"\n  }\n}"
+					"raw": "{\n  \"ticket_field\": {\n      \"type\": \"text\",\n      \"title\": \"dsapp_rating_user_id\",\n      \"description\": \"Needed field for dsapp app. Captures the current user's ID when they select a effort rating.\"\n  }\n}"
 				},
 				"url": {
 					"raw": "https://{{subdomain}}.zendesk.com/api/v2/ticket_fields",
@@ -134,7 +134,7 @@
 			"response": []
 		},
 		{
-			"name": "Create Custom Ticket Field - Complexity Rating User Name",
+			"name": "Create Custom Ticket Field - Effort Rating User Name",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -146,7 +146,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"ticket_field\": {\n      \"type\": \"text\",\n      \"title\": \"dsapp_rating_user_name\",\n      \"description\": \"Needed field for dsapp app. Captures the current user's name when they select a complexity rating.\"\n  }\n}"
+					"raw": "{\n  \"ticket_field\": {\n      \"type\": \"text\",\n      \"title\": \"dsapp_rating_user_name\",\n      \"description\": \"Needed field for dsapp app. Captures the current user's name when they select a effort rating.\"\n  }\n}"
 				},
 				"url": {
 					"raw": "https://{{subdomain}}.zendesk.com/api/v2/ticket_fields",
@@ -267,12 +267,12 @@
 		"basic": [
 			{
 				"key": "password",
-				"value": "password",
+				"value": "",
 				"type": "string"
 			},
 			{
 				"key": "username",
-				"value": "john@example.com",
+				"value": "bflynn@zendesk.com",
 				"type": "string"
 			}
 		]
@@ -301,7 +301,7 @@
 	],
 	"variable": [
 		{
-			"id": "c52e2ba1-b51c-4ef8-85a7-d2b281285d33",
+			"id": "9422f70e-9e62-43c2-9bcd-83a1b45149cb",
 			"key": "subdomain",
 			"value": "z3n3395",
 			"type": "string"
