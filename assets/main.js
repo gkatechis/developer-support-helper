@@ -248,10 +248,12 @@ function setFormData() {
     $('#additional-info').val('')
   }
 
-  if (isFormData)
-    top_bar.set('iconSymbol', 'filledSymbol')
-  else
-    top_bar.set('iconSymbol', 'emptySymbol')
+  // TODO: Change icon if info filled in or not
+  // TBD. This code is not run on every ticket, just when top_bar is clicked.
+  // if (isFormData)
+  //   top_bar.set('iconSymbol', 'filledSymbol')
+  // else
+  //   top_bar.set('iconSymbol', 'emptySymbol')
 }
 
 
