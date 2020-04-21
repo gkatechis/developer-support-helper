@@ -8,7 +8,7 @@
 //   Add hot keys?
 //   Consider modification: Just capture category (i.e. API, Mobile SDK, ZAF, etc -- is nuance needed?)
 //   Create a better icon_top_bar.svg image
-//   Growler when Applied clicked: "Developer Support information applied to ticket."
+//   Check if correct ticket form is selected, so changed data is saved on Submit.
 
 
 // ================================================================================================

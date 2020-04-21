@@ -2,7 +2,9 @@
 
 This app lets Z1 agents identify Developer Support tickets.
 
-It is opinionated and only allows one developer platform area to be selected. Additional textual information can be entered if needed.
+It is opinionated and only allows one developer platform area to be selected. 
+
+Optionally, additional textual information and effort score can be entered.
 
 Please submit bug reports to gkatechis@zendesk.com
 
