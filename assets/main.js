@@ -2,13 +2,10 @@
 // TODO
 // ================================================================================================
 //   Display user that last udpated record (in footer, greyed out)
-//   Create an Explore report and/or Google sheet report
-//   Throw error is required custom fields do not exist. Let user know about Postman collection.
-//   Figure out to avoid horizontal scrolling in app's window -- I think this is from Garden
+//   Throw error if required custom fields do not exist in instance.
 //   Add hot keys?
-//   Consider modification: Just capture category (i.e. API, Mobile SDK, ZAF, etc -- is nuance needed?)
-//   Create a better icon_top_bar.svg image
-//   Check if correct ticket form is selected, so changed data is saved on Submit.
+//   Create better icon_top_bar.svg image
+//   Display warning if if correct ticket form does not contain dsapp fields (just on Submit? Or Apply?)
 
 
 // ================================================================================================
@@ -27,8 +24,8 @@ let appFieldIDs
 // side_bar ticket app instance.
 let activeTicketSidebarClientInstance
 
-// Hardcoding this for now. Could incorporate other areas of product with different IDs in future.
-let developerSupportArea = 10
+// Hardcoding this for now. Could incorporate other areas of product with different tags in future.
+let developerSupportArea = "dsapp_area_dev"
 
 // Contains the data the agent sets in the app that will eventually be applied to the ticket.
 let ticket_info = {}
@@ -340,7 +337,7 @@ function applyButtonClicked() {
   activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.updated_by_user_id}`, ticket_info['updated_by_user_id'])
   activeTicketSidebarClientInstance.set(`ticket.customField:custom_field_${appFieldIDs.updated_by_user_name}`, ticket_info['updated_by_user_name'])
 
-  // UPDATE FIELDS VIA DIRECT API CALL
+  // ALTERNATE APPROACH: UPDATE FIELDS VIA DIRECT API CALL
   // const newTicketFieldValues = {
   //   ticket: {
   //      custom_fields: [
