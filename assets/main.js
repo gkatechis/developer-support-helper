@@ -201,6 +201,8 @@ function setCurrentTicketInfo(ticketInfo) {
 
     console.log('debug - setCurrentTicketInfo:', ticket_info)
   }
+
+  updateAppIcon()
 }
 
 
@@ -244,13 +246,16 @@ function setFormData() {
   } else {
     $('#additional-info').val('')
   }
+}
 
-  // TODO: Change icon if info filled in or not
-  // TBD. This code is not run on every ticket, just when top_bar is clicked.
-  // if (isFormData)
-  //   top_bar.set('iconSymbol', 'filledSymbol')
-  // else
-  //   top_bar.set('iconSymbol', 'emptySymbol')
+
+function updateAppIcon() {
+
+  if (!isEmpty(ticket_info['area']))
+    top_bar.set('iconSymbol', 'filledSymbol')
+  else
+    top_bar.set('iconSymbol', 'emptySymbol')
+
 }
 
 
@@ -368,6 +373,8 @@ function applyButtonClicked() {
   //   .catch((error) => {
   //     console.error('debug - applyButtonClicked error saving ticket update', error)
   //   })
+
+  updateAppIcon()
 
   top_bar.invoke('notify', 'Developer Support information applied to ticket.')
 
