@@ -220,7 +220,7 @@ function setFormData() {
   }
 
   if (!isEmpty(ticket_info['effort_rating'])) {
-    $(`#effort${ticket_info['effort_rating']}`).prop('checked', true)
+    $(`#${ticket_info['effort_rating']}`).prop('checked', true)
     isFormData = true
   } else {
     $('input[name=effort-rating]').prop('checked', false)
